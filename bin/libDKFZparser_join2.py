@@ -96,14 +96,14 @@ class DFKZData:
                 print "%s needs special treatment" % key
             else:
                 if len(data[key]) == 1:
-                    field = self._transdict[key][0:5]
-                    sf    = self._transdict[key][5]
-                    if not field in self._bibliographic[bibkey]:
-                        self._bibliographic[bibkey][field] = {}
-                    self._bibliographic[bibkey][field][sf] = data[key][0]
+                    if data[key] != None:
+                        field = self._transdict[key][0:5]
+                        sf    = self._transdict[key][5]
+                        if not field in self._bibliographic[bibkey]:
+                            self._bibliographic[bibkey][field] = {}
+                        self._bibliographic[bibkey][field][sf] = data[key][0]
                 else:
                     print "%s should not be repeatable." % key
-        print self._bibliographic[bibkey]
         return
 
     def _ParseData(self, filename):
