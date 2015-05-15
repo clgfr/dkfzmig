@@ -32,15 +32,119 @@ logger = logging.getLogger(__name__)
 
 from libDKFZparser_join2 import DFKZData
 
+def GetSubmissionType(pubtypes):
+    """
+    Derive the submission type, ie. the type we would use in websubmit
+
+    @param pubtypes: list of dicts containing pubtypes
+    """
+
+    submissiontype = ''
+
+    for pubtype in pubtypes:
+        if 's' in pubtype:
+            submissiontype = pubtype['m']
+
+    # TODO should we handle more than one submission type?
+
+    return submissiontype
+
+
+def PrepareWebsubmit(basedir, data):
+    """
+    Prepare records for websubmission. This should build up the proper
+    submission structure and run up to creation of `recmysql`.
+
+    @param basedir: base for the curdir structure of Invenio
+    """
+    from invenio.libwebsubmit_hgf import                          \
+        generateCurdir,                                           \
+        prepareUpload
+    from invenio.websubmit_functions.Websubmit_Helpers_hgf import \
+        write_done_file,                                          \
+        write_file,                                               \
+        write_json,                                               \
+        write_all_files
+
+    if '3367_' in data:
+        pubtypes = data['3367_']
+    else:
+        # TODO we need document types in 3367_
+        pubtypes = [{ "0": "PUB:(DE-HGF)1",
+                      "2": "PUB:(DE-HGF)",
+                      "a": "Abstract",
+                      "m": "abstract",
+                      "s": "--maintype--"
+                    },
+                    {
+                      "2": "DRIVER",
+                      "a": "conferenceObject"
+                    },
+                    {
+                      "2": "BibTeX",
+                      "a": "INPROCEEDINGS"
+                    },
+                    {
+                      "0": "33",
+                      "2": "EndNote",
+                      "a": "Conference Paper"
+                    }]
+
+    submissiontype = GetSubmissionType(pubtypes)
+
+    create_recid = False
+
+    (curdir, form, user_info) = generateCurdir(recid=None, uid=1,
+                                               access = 'TEST',
+                                               basedir=basedir, mode='SBI',
+                                               type=submissiontype,
+                                               create_recid=create_recid)
+    write_all_files(curdir, data)
+    prepareUpload(curdir, form, user_info, mode='SBI')
+
+    return
+
+def Pack4Upload(basedir, uploadir):
+    """
+    Pack all recmysql in a given websubmit structure up for submission in one
+    go.
+
+    @param basedir: base for the curdir structure of Invenio
+    @param uploaddir: directory for the packages
+    """
+
+    # TODO
+    return
+
 
 #======================================================================
 def main():
     """
     """
     logger.info("Entering main")
+    import cPickle as pickle
+
+    dataP = 'data.p'
+
+    # AOP == Ahead of Print?
+    # Abstract = Abstract submissions?
 
     # data = DFKZData('../samples/ABSTRACT_AOP.xml')
-    data = DFKZData('../samples/ABSTRACT_PUB.xml')
+
+    basedir = './websubmit'
+
+    try:
+        # we do not have etree on python 2.4!
+        data = pickle.load(open(dataP, 'rb'))
+    except:
+        data = DFKZData('../samples/ABSTRACT_PUB.xml')
+        pickle.dump(data, open(dataP, 'wb'))
+
+    for key in data.getBibliographic():
+        print key
+        PrepareWebsubmit(basedir, data.getBibliographic()[key])
+        # TODO remove:
+        die
 
 
     return
