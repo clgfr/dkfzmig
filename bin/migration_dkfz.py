@@ -39,7 +39,8 @@ def main():
     """
     logger.info("Entering main")
 
-    data = DFKZData('../samples/ABSTRACT_AOP.xml')
+    # data = DFKZData('../samples/ABSTRACT_AOP.xml')
+    data = DFKZData('../samples/ABSTRACT_PUB.xml')
 
 
     return
@@ -49,7 +50,7 @@ if __name__ == '__main__':
     parser.add_argument('--verbose', '-v', default = 0, action='count')
     args = parser.parse_args()
 
-    logger.info('FIXME What do we do?')
+    logger.info('Migrating data for DFZK')
 
     if args.verbose == 0:
         # Default

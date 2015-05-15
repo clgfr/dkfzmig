@@ -41,10 +41,16 @@ class DFKZData:
 
     def __init__(self, filename):
 
+        # primary keys of initial data
+        self._bibkeys       = {}
+
         # _bibliographic holds all data we get from the input file, where each
         # record is an entry in the dict. As keys we use the old record id
-        _bibliographic = {}
-        _transdict     = self._setupTransdict()
+        self._bibliographic = {}
+
+        # translation dictionary of input tags => Marc fields
+        self._transdict     = self._setupTransdict()
+
         self._ParseData(filename)
         return
 
@@ -58,35 +64,60 @@ class DFKZData:
         transdict['publishedID'] = '970__a'
         transdict['Artikel']     = '245__a'
         transdict['PubYear']     = '260__c'
+        transdict['PubVol']      = '440__v'
+        transdict['PubIss']      = '440__n'
         transdict['Journal']     = '440__t'
-        transdict['Volume']      = '440__v'
-        transdict['Issue']       = '440__n'
         transdict['KEYWORD']     = '653__a'
+        transdict['ABSTr']       = '520__a' # is this correct
 
         # fields that will require special treatment
-        transdict['StrtPage']    = 'spage'
-        transdict['EndPage']     = 'epage'
-        transdict['KST']         = 'KST'
-        transdict['Author']      = 'Author'
+        transdict['DOI']         = '#0247_2doia'
+        transdict['StrtPage']    = '#spage'
+        transdict['EndPage']     = '#epage'
+        transdict['KST']         = '#KST'
+        transdict['Author']      = '#Author'
+        transdict['Feld596']     = '#Feld596'
 
 
         return transdict
 
     def _appendBibliographic(self, data):
         """
-        Append data to the _bibliographic entries which are keyed by old id (970)
+        Append data to the _bibliographic entries which are keyed by old id.
+        Also store old ids as _bibkey for future reference
+
+        TODO handle special fields
         """
+        bibkey = data['publishedID'][0]
+        self._bibkeys[bibkey] = 1
+        self._bibliographic[bibkey] = {}
+        for key in data:
+            if '#' in self._transdict[key]:
+                print "%s needs special treatment" % key
+            else:
+                if len(data[key]) == 1:
+                    field = self._transdict[key][0:5]
+                    sf    = self._transdict[key][5]
+                    if not field in self._bibliographic[bibkey]:
+                        self._bibliographic[bibkey][field] = {}
+                    self._bibliographic[bibkey][field][sf] = data[key][0]
+                else:
+                    print "%s should not be repeatable." % key
+        print self._bibliographic[bibkey]
         return
 
     def _ParseData(self, filename):
+        """
+        Parse data from an xml file into python structures
+        """
         import xml.etree.ElementTree as ET
 
         tree = ET.parse(filename)
         root = tree.getroot()
 
-        for rw in root:
+        for node in root:
             dataset = {}
-            for child in rw:
+            for child in node:
                 if child.tag == 'Author':
                     # Authors encode all data in attributes
                     audict = {}
@@ -111,77 +142,20 @@ class DFKZData:
                     if not child.tag in dataset:
                         dataset[child.tag] = []
                     dataset[child.tag].append(child.text)
-
-            print dataset
-            # TODO move dataset to _bibliographic
+            self._appendBibliographic(dataset)
 
         return
 
-    def fillCurdir(self, basedir):
+    def getBibliographic(self):
         """
+        Return all bibliographic data collected by the parser
         """
-        return
+        return self._bibliographic
 
-    ### def getAuthors(self):
-    ### return
-
-    ### def getTitle(self):
-    ### return
-
-    ### def get970(self):
-    ### return
-
-    ### def getPubyear(self):
-    ### return
-
-    ### def get440__t(self):
-    ### return
-
-    ### def get440__y(self):
-    ### return
-
-    ### def get440__n(self):
-    ### return
-
-    ### def get440__v(self):
-    ### return
-
-    ### def get440__p(self):
-    ### return
-
-    ### def get0247_(self)
-    ### return
-
-    ### def getWorkflowStatus(self)
-    ### return
-
-    ### def getInstitute(self)
-    ### return
-
-#======================================================================
-def main():
-    """
-    """
-    logger.info("Entering main")
-
-    return
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--verbose', '-v', default = 0, action='count')
-    args = parser.parse_args()
-
-    logger.info('FIXME What do we do?')
-
-    if args.verbose == 0:
-        # Default
-        log_level = logging.WARNING
-    elif args.verbose == 1:
-        log_level = logging.INFO
-    elif args.verbose == 2:
-        log_level = logging.DEBUG
-    else:
-        log_level = logging.ERROR
-    logger.setLevel(log_level)
-    main()
+    def getBibKeys(self):
+        """
+        Return all bibkeys we have in the bibliographic data. They are derived
+        from the primary keys of our intial datasets.
+        """
+        return self._bibkeys
 
