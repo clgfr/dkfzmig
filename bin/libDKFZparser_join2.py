@@ -446,4 +446,4 @@ if __name__=='__main__':
         myData = DKFZData(sys.argv[1])
     #sys.exit(0)
     bibliographic = myData.getBibliographic()
-    #pprint(bibliographic)
+    pprint(bibliographic)
