@@ -25,12 +25,13 @@ Migration script for DFKZ
 # Variable naming conventions: we use Uppercase for function names:
 # pylint: disable-msg=C0103
 
-import argparse
+#import argparse
 import logging
+import sys
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 
-from libDKFZparser_join2 import DFKZData
+from libDKFZparser_join2 import DKFZData
 
 def GetSubmissionType(pubtypes):
     """
@@ -133,23 +134,33 @@ def main():
 
     basedir = './websubmit'
 
-    try:
-        # we do not have etree on python 2.4!
-        data = pickle.load(open(dataP, 'rb'))
-    except:
-        data = DFKZData('../samples/ABSTRACT_PUB.xml')
-        pickle.dump(data, open(dataP, 'wb'))
+    #try:
+    #    # we do not have etree on python 2.4!
+    #    data = pickle.load(open(dataP, 'rb'))
+    #except:
+        #data = DKFZData('../samples/ABSTRACT_PUB.xml')
+        #data = DKFZData('ABSTRACT_PUB.xml')
 
+    data = DKFZData('ABSTRACT_AOP.xml')
+    #data = DKFZData('ABSTRACT_AOP.xml', simulation=True)
+
+    #pickle.dump(data, open(dataP, 'wb'))
+
+    import pprint
     for key in data.getBibliographic():
         print key
+        #pprint.pprint(data.getBibliographic()[key])
         PrepareWebsubmit(basedir, data.getBibliographic()[key])
         # TODO remove:
-        die
+        #die
 
 
     return
 
 if __name__ == '__main__':
+    main()
+    sys.exit(0)
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--verbose', '-v', default = 0, action='count')
     args = parser.parse_args()
