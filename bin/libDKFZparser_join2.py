@@ -26,14 +26,14 @@ Process DFKZ data to structures for later reuse
 # Variable naming conventions: we use Uppercase for function names:
 # pylint: disable-msg=C0103
 
-#import argparse
 import logging
-from pprint import pprint
+from pprint import pprint, pformat
 import sys
 import string
-import simplejson as json
-from invenio.websubmit_functions.Websubmit_Helpers_hgf import washJSONinput
-from invenio.search_engine import perform_request_search, print_record
+#import simplejson as json
+# TODO: uncomment the following lines in productive environemnt
+#from invenio.websubmit_functions.Websubmit_Helpers_hgf import washJSONinput
+#from invenio.search_engine import perform_request_search, print_record
 
 
 logging.basicConfig()
@@ -51,7 +51,7 @@ class DKFZData:
     _OTHER_AUTH = '7001_'
     _DKFZ_AUTH  = '9101_'
 
-    def __init__(self, filename, minidom='default'):
+    def __init__(self, filename, simulation='False', minidom='False'):
 
         # primary keys of initial data
         self._bibkeys       = {}
@@ -73,55 +73,46 @@ class DKFZData:
         self._pofsearchdict = self._setupPofSearchDict()
 
         #writing once POF-Fields from Invenio database to dict of DKFZ relevant POF-Prog-Dict  
-        self._pofdict = self._setupPofDict()
+        self._pofdict = self._setupPofDict(simulation)
         #print ('self._pofdict #####:', self._pofdict)
 
-	(pubType, pubStatus) = self._getPubDetails(filename)
-	#print 'pubDetails', pubType, pubStatus
-	if minidom == 'minidom':
-            #print 'using minidom'
-            self._ParseDataMinidom(filename, pubType, pubStatus)
+	if minidom == 'True':
+            print 'using minidom'
+            self._ParseDataMinidom(filename)
 	else:
-            self._ParseData(filename, pubType, pubStatus)
+	    print 'using ElemnetTree'
+            self._ParseData(filename)
         return
 
     def _getDict(self, idtype, idvalue):
         return {'2': idtype, 'a': idvalue}
 
-    def _getPubDetails(self, filename):
-	    (filename, suffix) = string.split(filename, '.')
-	    if not filename == 'BOOK_CHAPTER' and '_' in filename:
-	        (pubType, pubStatus) = string.split(filename, '_')
-		if pubStatus == 'AOP':
-	            pubStatus = 'Abstract'
-		elif pubStatus == 'PUB':
-		    pubStatus = 'published'
-		else:
-		    print "%s: unknown pubStatus ." % pubStatus
-	    else:
-		pubType = filename
-		pubStatus = 'published'
-	    return pubType, pubStatus
+    def _getAuthority(self, prog, simulation):
 
-    def _getAuthority(self, prog):
-
-        import simplejson as json
-        from invenio.websubmit_functions.Websubmit_Helpers_hgf import washJSONinput
-        from invenio.search_engine import perform_request_search, print_record
-        search_str = self._pofsearchdict[prog]
-        #print 'search_string:', search_str
+	
+        if simulation == False:
+            import simplejson as json
+            from invenio.websubmit_functions.Websubmit_Helpers_hgf import washJSONinput
+            from invenio.search_engine import perform_request_search, print_record
+            search_str = self._pofsearchdict[prog]
+            #print 'search_string:', search_str
  
-        authrec = perform_request_search(p=search_str)
-        if len(authrec) == 1:
-           jsontext = print_record(authrec[0], format='js')
-           #print jsontext
-           jsontext = washJSONinput(jsontext)
-           #print jsontext
-           jsondict = json.loads(jsontext, 'utf8')
-           return jsondict
-           #return authrec[0]
+            authrec = perform_request_search(p=search_str)
+            if len(authrec) == 1:
+               jsontext = print_record(authrec[0], format='js')
+               #print jsontext
+               jsontext = washJSONinput(jsontext)
+               #print jsontext
+               jsondict = json.loads(jsontext, 'utf8')
+               return jsondict
+               #return authrec[0]
+        else: # simulation mode no connection to Invenio
+	    return self._getPOF('Krebsforschung')
 
     def _getPOF(self, key):
+	""" 
+	Dummy: return fixed entry when no connection to Invenio
+	"""
 	pof = {}
 	if key == 'Krebsforschung':
             pof['I536__0'] =  'G:(DE-HGF)POF3-311', 
@@ -190,14 +181,10 @@ class DKFZData:
 
         return transdict
 
-    def _setupPofDict(self):
+    def _setupPofDict(self, simulation):
         pofdict ={}
         for prog in self._progs:
-            pofdict[prog] = self._getAuthority(prog)
-            print('prog:', prog)
-            pprint(pofdict)
-        print('vor return:')
-        pprint(pofdict)
+            pofdict[prog] = self._getAuthority(prog, simulation)
         return pofdict
 
     def _processPages(self, bibkey, field, data):
@@ -361,16 +348,21 @@ class DKFZData:
                     print "%s should not be repeatable." % key
         return
 
-    def _ParseData(self, filename, pubType, pubStatus):
+    def _ParseData(self, filename):
         """
         Parse data from an xml file into python structures with ElementTree
         """
-        import xml.etree.ElementTree as ET
+        #import xml.etree.ElementTree as ET
+        import ElementTree as ET
 
         tree = ET.parse(filename)
         root = tree.getroot()
 
+	rowno = 0
+	print 'Processing %s rows' % len(root)
         for node in root:
+	    rowno = rowno + 1
+	    print 'Row-No: ', rowno
             dataset = {}
             for child in node:
                 if child.tag == 'Author':
@@ -399,27 +391,21 @@ class DKFZData:
                     if not child.tag in dataset:
                         dataset[child.tag] = []
                     dataset[child.tag].append(child.text)
-	    dataset['PubType'] = []
-	    dataset['PubType'].append(pubType)
-	    dataset['PubStatus'] = []
-	    dataset['PubStatus'].append(pubStatus)
             self._appendBibliographic(dataset)
 
         return
 
-    def _ParseDataMinidom(self, filename, pubType, pubStatus):
+    def _ParseDataMinidom(self, filename):
         """
         Parse data from an xml file into python structures with Minidom
         """
 	
 	from xml2py import XML2Dict
-        xd = XML2Dict(filename, pubType, pubStatus)
+        xd = XML2Dict(filename, 'pubType', 'pubStatus')
         pubList = xd.adapt()
 
         # List of dictionaries
         for pub in pubList:
-	    #import pprint
-	    #pprint.pprint(pub)
             self._appendBibliographic(pub)
 
         return
@@ -440,10 +426,18 @@ class DKFZData:
 # for testing
 # usage: libDKFZparser_join2.py <filename> [False (default: use ElementTree) | True (use minidom) ]
 if __name__=='__main__':
-    if len(sys.argv) == 3:
-        myData = DKFZData(sys.argv[1], sys.argv[2])
-    else:
-        myData = DKFZData(sys.argv[1])
-    #sys.exit(0)
+    import optparse
+    options = optparse.OptionParser(description = 'Command line option')
+    options.add_option('-i', '--input', dest = 'input', default = None)
+    options.add_option('-o', '--output', dest = 'output', default = None)
+    options.add_option('-m', '--minidom', dest = 'minidom', default = False)
+    options.add_option('-s', '--simulation', dest = 'simulation', default = False)
+
+    (options, argv) = options.parse_args(sys.argv)
+
+    myData = DKFZData(options.input, options.simulation, options.minidom)
     bibliographic = myData.getBibliographic()
-    pprint(bibliographic)
+    f = open(options.output, 'w')
+    #f.write(str(pprint(bibliographic)))
+    f.write(pformat(bibliographic))
+    f.close()
