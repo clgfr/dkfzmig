@@ -30,6 +30,8 @@ import logging
 from pprint import pprint, pformat
 import sys
 import string
+from invenio.libHelpers_hgf import marcdict_to_listofdicts
+from invenio.libHandleNames_join2 import NormalizeName
 #import simplejson as json
 # TODO: uncomment the following lines in productive environemnt
 #from invenio.websubmit_functions.Websubmit_Helpers_hgf import washJSONinput
@@ -76,11 +78,11 @@ class DKFZData:
         self._pofdict = self._setupPofDict(simulation)
         #print ('self._pofdict #####:', self._pofdict)
 
-	if minidom == 'True':
+        if minidom == 'True':
             print 'using minidom'
             self._ParseDataMinidom(filename)
-	else:
-	    print 'using ElemnetTree'
+        else:
+            print 'using ElemnetTree'
             self._ParseData(filename)
         return
 
@@ -89,7 +91,7 @@ class DKFZData:
 
     def _getAuthority(self, prog, simulation):
 
-	
+        
         if simulation == False:
             import simplejson as json
             from invenio.websubmit_functions.Websubmit_Helpers_hgf import washJSONinput
@@ -107,26 +109,28 @@ class DKFZData:
                return jsondict
                #return authrec[0]
         else: # simulation mode no connection to Invenio
-	    return self._getPOF('Krebsforschung')
+            return self._getPOF('Krebsforschung')
 
     def _getPOF(self, key):
-	""" 
-	Dummy: return fixed entry when no connection to Invenio
-	"""
-	pof = {}
-	if key == 'Krebsforschung':
-            pof['I536__0'] =  'G:(DE-HGF)POF3-311', 
-            pof['I536__a'] =  '311 - Signalling pathways, cell and tumor biology (POF3-311)', 
-            pof['I536__c'] =  'POF3-311', 
-            pof['I536__f'] =  'POF III', 
-            pof['I9131_0'] =  'G:(DE-HGF)POF3-311', 
-            pof['I9131_1'] =  'G:(DE-HGF)POF3-310', 
-            pof['I9131_2'] =  'G:(DE-HGF)POF3-300', 
-            pof['I9131_a'] =  'DE-HGF', 
-            pof['I9131_b'] =  'Forschungsbereich Gesundheit', 
-            pof['I9131_l'] =  'Krebsforschung', 
-            pof['I9131_v'] =  'Signalling pathways, cell and tumor biology', 
-            pof['label'] =  '311 - Signalling pathways, cell and tumor biology (POF III: 2015 - 2019)'
+        """ 
+        Dummy: return fixed entry when no connection to Invenio
+        TODO use GetFieldsForID(authorityId) from libHelpers_hgf
+        """
+        pof = {}
+        if key == 'Krebsforschung':
+            # TODO  GetFieldsForID('G:(DE-HGF)POF3-311')
+            pof['I536__0'] =  'G:(DE-HGF)POF3-311' 
+            pof['I536__a'] =  '311 - Signalling pathways, cell and tumor biology (POF3-311)'
+            pof['I536__c'] =  'POF3-311'
+            pof['I536__f'] =  'POF III' 
+            pof['I9131_0'] =  'G:(DE-HGF)POF3-311' 
+            pof['I9131_1'] =  'G:(DE-HGF)POF3-310' 
+            pof['I9131_2'] =  'G:(DE-HGF)POF3-300' 
+            pof['I9131_a'] =  'DE-HGF'
+            pof['I9131_b'] =  'Forschungsbereich Gesundheit'
+            pof['I9131_l'] =  'Krebsforschung'
+            pof['I9131_v'] =  'Signalling pathways, cell and tumor biology'
+            # pof['label'] =  '311 - Signalling pathways, cell and tumor biology (POF III: 2015 - 2019)'
             return pof
 
     def _setupPofSearchDict(self):
@@ -190,16 +194,16 @@ class DKFZData:
     def _processPages(self, bibkey, field, data):
 
         start = data['Strtp']
-	if data.has_key('Endp'):
+        if data.has_key('Endp'):
             end = data['Endp']
-	    if end[0] == None:
+            if end[0] == None:
                 end = start
-	#reminder TODO: if end[0]==' '	
-        else:	
+        #reminder TODO: if end[0]==' '  
+        else:   
             end = start
         pages = str(start[0]) + '-' + str(end[0])
-	content = {}
-	content['p'] = pages
+        content = {}
+        content['p'] = pages
 
         self._bibliographic[bibkey][field].update(content)
 
@@ -209,63 +213,65 @@ class DKFZData:
         auth_list_dkfz = []
     
         for author in authors:
-	    
+            
             pos    = author['pos']
-            name   = author['name']
+            name   = NormalizeName(author['name'])
             isDKFZ = author['IsDKFZ']
 
             if isDKFZ == True:
                 content = {} 
-    	        content['k'] = 'DKFZ'
-    	        content['x'] = pos
-		auth_list_dkfz.append(content)
+                content['k'] = 'DKFZ'
+                content['x'] = pos
+                auth_list_dkfz.append(content)
     
             if pos == '0':
                 content = {} 
-    	        content['a'] = name
-    	        content['b'] = pos
+                content['a'] = name
+                content['b'] = pos
         
-		first_auth = []
-        	first_auth.append(content)
+                first_auth = []
+                first_auth.append(content)
     
                 self._bibliographic[pubId][self._FIRST_AUTH] = first_auth
             else:
     
                 content = {} 
-    	        content['a'] = name
-    	        content['b'] = pos
-    	        auth_list.append(content)
+                content['a'] = name
+                content['b'] = pos
+                auth_list.append(content)
     
 
-	if len(auth_list) > 1: # we have more than one author
+        if len(auth_list) > 1: # we have more than one author
             self._bibliographic[pubId][self._OTHER_AUTH] = auth_list
     
-	if len(auth_list_dkfz) > 0: # we have at least one DKFZ author
+        if len(auth_list_dkfz) > 0: # we have at least one DKFZ author
             self._bibliographic[pubId][self._DKFZ_AUTH] = auth_list_dkfz
 
     def _processKST(self, pubId, field, ksts):
         idx = 0
-	kst_list = []
+        kst_list = []
 
-	for kst in ksts:
-	    content = {}
+        for kst in ksts:
+            content = {}
 
-	    content['k'] = kst
-	    content['x'] = idx
+            content['0'] = kst # TODO get real IDs
+            content['k'] = kst
+            content['l'] = kst # TODO get long name
+            content['x'] = idx
 
-	    kst_list.append(content)
+            kst_list.append(content)
 
-	    idx = idx + 1
+            idx = idx + 1
 
         self._bibliographic[pubId][field] = kst_list
 
     def _processKeywords(self, pubId, field, keywords):
-	keyword_list = []
+        keyword_list = []
 
-	for keyword in keywords:
+        for keyword in keywords:
             content = self._getDict('Author', keyword)
 
-	    keyword_list.append(content)
+            keyword_list.append(content)
 
         self._bibliographic[pubId][field] = keyword_list
 
@@ -274,29 +280,29 @@ class DKFZData:
         if not field in self._bibliographic[bibkey]:
                         self._bibliographic[bibkey][field] = [] 
 
-	id_list_res = self._bibliographic[bibkey][field]
+        id_list_res = self._bibliographic[bibkey][field]
 
-	for entry in id_list:
+        for entry in id_list:
             id_dict = self._getDict(idtype, entry)
-	    id_list_res.append(id_dict)
+            id_list_res.append(id_dict)
 
         self._bibliographic[bibkey][field] = id_list_res
 
     def _processProg(self, pubId, field, progs):
 
-	for prog in progs:
-            #print 'PROG', prog
-	    #pof_dict = self._getPOF(key=prog)
-	    pof_dict = self._pofdict[prog]
-	    for key in pof_dict.keys():
-		    if key != 'label':
-		        field = key[1:6]
-                        sf    = key[6]
-		        #print key, field, sf
-			if not self._bibliographic[pubId].has_key(field):
-                            self._bibliographic[pubId][field] = {}
-                            self._bibliographic[pubId][field]['x'] = '0'
-                        self._bibliographic[pubId][field][sf] = pof_dict[key]
+        for prog in progs:
+            # print 'PROG', prog
+            pof_dict = self._getPOF(key=prog)
+            pof_dict = marcdict_to_listofdicts(self._pofdict[prog])
+
+            for key in pof_dict.keys():
+                if not self._bibliographic[pubId].has_key(key):
+                        self._bibliographic[pubId][key] = {}
+                        counter = 0
+                
+                self._bibliographic[pubId][key]               = pof_dict[key]
+                self._bibliographic[pubId][key][counter]['x'] = str(counter)
+                counter += 1
 
     def _appendBibliographic(self, data):
         """
@@ -309,29 +315,29 @@ class DKFZData:
         self._bibkeys[bibkey] = 1
         self._bibliographic[bibkey] = {}
         for key in data:
-	    #if not self._transdict.has_key(key):
+            #if not self._transdict.has_key(key):
             #    print "%s does not exist _transdict." % key
-	    #	return
+            #   return
                 
             if '#' in self._transdict[key]:
                 field = self._transdict[key][1:]
-		#print 'FIELD', field
-		if key == 'Author':
-		    self._processAuthors(bibkey, data[key])
-	        elif key == 'Strtp':
-		    self._processPages(bibkey, field, data)
-	        elif key == 'Endp':
-		    pass
-	        elif key == 'KST':
-		    self._processKST(bibkey, field, data[key])
-	        elif key == 'KEYWORD':
-		     self._processKeywords(bibkey, field, data[key])
-	        elif key in ['PMID', 'DOI', 'MOUSE']:
-		    self._processIDs(bibkey, field, key, data[key])
-	        elif key == 'Feld596':
-		    pass
-	        elif key == 'Prog':
-		     self._processProg(bibkey, field, data[key])
+                #print 'FIELD', field
+                if key == 'Author':
+                    self._processAuthors(bibkey, data[key])
+                elif key == 'Strtp':
+                    self._processPages(bibkey, field, data)
+                elif key == 'Endp':
+                    pass
+                elif key == 'KST':
+                    self._processKST(bibkey, field, data[key])
+                elif key == 'KEYWORD':
+                     self._processKeywords(bibkey, field, data[key])
+                elif key in ['PMID', 'DOI', 'MOUSE']:
+                    self._processIDs(bibkey, field, key, data[key])
+                elif key == 'Feld596':
+                    pass
+                elif key == 'Prog':
+                     self._processProg(bibkey, field, data[key])
                 else:
                     print "%s needs special treatment" % key
 
@@ -341,7 +347,7 @@ class DKFZData:
                         field = self._transdict[key][0:5]
                         sf    = self._transdict[key][5]
                         #if not field in self._bibliographic[bibkey]:
-			if not self._bibliographic[bibkey].has_key(field):
+                        if not self._bibliographic[bibkey].has_key(field):
                             self._bibliographic[bibkey][field] = {}
                         self._bibliographic[bibkey][field][sf] = data[key][0]
                 else:
@@ -358,11 +364,11 @@ class DKFZData:
         tree = ET.parse(filename)
         root = tree.getroot()
 
-	rowno = 0
-	print 'Processing %s rows' % len(root)
+        rowno = 0
+        print 'Processing %s rows' % len(root)
         for node in root:
-	    rowno = rowno + 1
-	    print 'Row-No: ', rowno
+            rowno = rowno + 1
+            print 'Row-No: ', rowno
             dataset = {}
             for child in node:
                 if child.tag == 'Author':
@@ -372,11 +378,11 @@ class DKFZData:
                         audict['name'] = child.attrib['name']
 
                     if 'IsDKFZ' in child.attrib:
-			# audict['IsDKFZ'] = False if child.attrib['IsDKFZ'] == '0' else True
-			if child.attrib['IsDKFZ'] == '0': 
-			    audict['IsDKFZ'] = False
-			else:
-			    audict['IsDKFZ'] = True
+                        # audict['IsDKFZ'] = False if child.attrib['IsDKFZ'] == '0' else True
+                        if child.attrib['IsDKFZ'] == '0': 
+                            audict['IsDKFZ'] = False
+                        else:
+                            audict['IsDKFZ'] = True
 
                     if 'Pos' in child.attrib:
                         audict['pos'] = child.attrib['Pos']
@@ -399,8 +405,8 @@ class DKFZData:
         """
         Parse data from an xml file into python structures with Minidom
         """
-	
-	from xml2py import XML2Dict
+        
+        from xml2py import XML2Dict
         xd = XML2Dict(filename, 'pubType', 'pubStatus')
         pubList = xd.adapt()
 
