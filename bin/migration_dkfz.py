@@ -101,6 +101,9 @@ def PrepareWebsubmit(basedir, data):
                                                type=submissiontype,
                                                create_recid=create_recid)
     write_all_files(curdir, data)
+    # 245__ is special, as we have the structured subfield $h that gets
+    # flattened in websubmit procedures.
+    write_file(curdir, 'hgf_245__a', data['245__']['a'])
     prepareUpload(curdir, form, user_info, mode='SBI')
 
     return
@@ -141,7 +144,7 @@ def main():
         #data = DKFZData('../samples/ABSTRACT_PUB.xml')
         #data = DKFZData('ABSTRACT_PUB.xml')
 
-    data = DKFZData('ABSTRACT_AOP.xml')
+    data = DKFZData('../samples/ABSTRACT_AOP.xml')
     #data = DKFZData('ABSTRACT_AOP.xml', simulation=True)
 
     #pickle.dump(data, open(dataP, 'wb'))
