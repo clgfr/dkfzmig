@@ -100,6 +100,8 @@ def PrepareWebsubmit(basedir, data):
                                                basedir=basedir, mode='SBI',
                                                type=submissiontype,
                                                create_recid=create_recid)
+    write_file(curdir, 'hgf_release', 'yes')
+    write_file(curdir, 'hgf_vdb', 'yes')
     write_all_files(curdir, data)
     # 245__ is special, as we have the structured subfield $h that gets
     # flattened in websubmit procedures.
