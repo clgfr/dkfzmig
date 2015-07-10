@@ -110,18 +110,47 @@ def PrepareWebsubmit(basedir, data):
 
     return
 
-def Pack4Upload(basedir, uploadir):
+def Pack4Upload(basedir, obatchdir, packagesize=1000):
     """
-    Pack all recmysql in a given websubmit structure up for submission in one
-    go.
+    Pack all files from our webmodifications to larger bunches to upload them in
+    one go. This saves significant time and keeps the bibsched queue short in
+    case we have many uploads to process.
 
-    @param basedir: base for the curdir structure of Invenio
-    @param uploaddir: directory for the packages
+    Note that we need to keep oabatchdir as the acutal upload is asynchronous.
+    So bibupload needs to find it's files probably a lot later (say the queue
+    is on halt) otherwise it will die.
+    Here we use a subdir of /tmp and rely on *nix for the house keeping of
+    /tmp. For very long delays this might fail as *nix will clean up. If we
+    have a huge number of files and are tight on disk space this might also
+    result in trouble.
+
+    @type basedir: string / path
+    @param basedir: base of the websubmission tree, where we extract the
+                    recmysql-xml-files from
+    @type uploaddir: string / path
+    @param uploaddir: dir where to place our bunch files in
+    @type packagesize: integer
+    @param packagesize: number of records to pack into one bunch
+
     """
+    from os import listdir, makedirs
+    from shutil import rmtree
 
-    # TODO
+    try:
+        rmtree(oabatchdir)
+    except OSError:
+        pass
+    makedirs(oabatchdir)
+
+    webmodify.pack_files(oabatchdir, basedir, pack_no=packagesize)
+    for xmlfile in listdir(oabatchdir):
+        # upload2invenio does not need form or user_info. They are just there
+        # for compatiblity issues in the rest of invenios code.
+        webmodify.upload2invenio(dir=oabatchdir,
+                                 form='', user_info='',
+                                 filename=xmlfile)
+
     return
-
 
 #======================================================================
 def main():
@@ -159,6 +188,7 @@ def main():
         # TODO remove:
         #die
 
+    Pack4Upload(basedir, '/tmp/oabatch', packagesize=1000)
 
     return
 
