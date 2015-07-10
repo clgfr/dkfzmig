@@ -96,7 +96,7 @@ def PrepareWebsubmit(basedir, data):
     create_recid = False
 
     (curdir, form, user_info) = generateCurdir(recid=None, uid=1,
-                                               access = 'TEST',
+                                               access = data['970__']['a'],
                                                basedir=basedir, mode='SBI',
                                                type=submissiontype,
                                                create_recid=create_recid)
