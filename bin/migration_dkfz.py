@@ -110,13 +110,13 @@ def PrepareWebsubmit(basedir, data):
 
     return
 
-def Pack4Upload(basedir, obatchdir, packagesize=1000):
+def Pack4Upload(basedir, batchdir, packagesize=1000):
     """
     Pack all files from our webmodifications to larger bunches to upload them in
     one go. This saves significant time and keeps the bibsched queue short in
     case we have many uploads to process.
 
-    Note that we need to keep oabatchdir as the acutal upload is asynchronous.
+    Note that we need to keep batchdir as the acutal upload is asynchronous.
     So bibupload needs to find it's files probably a lot later (say the queue
     is on halt) otherwise it will die.
     Here we use a subdir of /tmp and rely on *nix for the house keeping of
@@ -135,18 +135,19 @@ def Pack4Upload(basedir, obatchdir, packagesize=1000):
     """
     from os import listdir, makedirs
     from shutil import rmtree
+    import invenio.libwebsubmit_hgf  as webmodify
 
     try:
-        rmtree(oabatchdir)
+        rmtree(batchdir)
     except OSError:
         pass
-    makedirs(oabatchdir)
+    makedirs(batchdir)
 
-    webmodify.pack_files(oabatchdir, basedir, pack_no=packagesize)
-    for xmlfile in listdir(oabatchdir):
+    webmodify.pack_files(batchdir, basedir, pack_no=packagesize)
+    for xmlfile in listdir(batchdir):
         # upload2invenio does not need form or user_info. They are just there
         # for compatiblity issues in the rest of invenios code.
-        webmodify.upload2invenio(dir=oabatchdir,
+        webmodify.upload2invenio(dir=batchdir,
                                  form='', user_info='',
                                  filename=xmlfile)
 
@@ -188,7 +189,7 @@ def main():
         # TODO remove:
         #die
 
-    Pack4Upload(basedir, '/tmp/oabatch', packagesize=1000)
+    Pack4Upload(basedir, '/tmp/batch', packagesize=1000)
 
     return
 
