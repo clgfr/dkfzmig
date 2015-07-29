@@ -152,35 +152,36 @@ class DKFZData:
         mapping.
         """
         transdict = {}
-        transdict['publishedID'] = '970__a'
-        transdict['Artikel']     = '245__a'
-        transdict['PubYear']     = '260__c'
-        transdict['PubVol']      = '440__v'
-        transdict['PubIss']      = '440__n'
-        transdict['Journal']     = '440__t'
-        #transdict['KEYWORD']     = '653__a'
-        transdict['ABSTr']       = '520__a' # is this correct
+        transdict['publishedID']  =  '970__a'
+        transdict['Artikel']      =  '245__a'
+        transdict['PubYear']      =  '260__c'
+        transdict['PubVol']       =  '440_0v'
+        transdict['PubIss']       =  '440_0n'
+        transdict['Journal']      =  '440_0a'
+        #transdict['KEYWORD']     =  '653__a'
+        transdict['ABSTr']        =  '520__a' # is this correct
 
-        transdict['PubType']       = '3367_a' # is this correct
-        transdict['PubStatus']       = '999__a' # is this correct
+        transdict['PubType']      =  '3367_a' # is this correct
+        transdict['PubStatus']    =  '999__a' # is this correct
 
 
         # fields that will require special treatment
-        #transdict['DOI']         = '#0247_2doia'
-        transdict['DOI']         = '#0247_'
-        transdict['PMID']        = '#0247_'
-        transdict['MOUSE']       = '#0247_'
+        #transdict['DOI']      =  '#0247_2doia'
+        transdict['DOI']       =  '#0247_'
+        transdict['PMID']      =  '#0247_'
+        transdict['MOUSE']     =  '#0247_'
 
-        transdict['Strtp']    = '#440__'
-        transdict['Endp']     = '#epage'
-        #transdict['KST']         = '#KST'
-        transdict['KST']         = '#9201_'
-        transdict['Author']      = '#Author'
-        transdict['Feld596']     = '#Feld596'  
-        #transdict['PMID']     = '#PMID'
-        #transdict['KEYWORD']     = '#KEYWORD' # 65320
-        transdict['KEYWORD']     = '#65320'
-        transdict['Prog']     = '#Prog'
+        transdict['Strtp']     =  '#440_0'
+        transdict['Endp']      =  '#epage'
+        #transdict['KST']      =  '#KST'
+        transdict['KST']       =  '#9201_'
+        transdict['Author']    =  '#Author'
+        transdict['Feld596']   =  '#Feld596'
+        #transdict['PMID']     =  '#PMID'
+
+        #transdict['KEYWORD']  =  '#KEYWORD' # 65320
+        transdict['KEYWORD']   =  '#65320'
+        transdict['Prog']      =  '#Prog'
 
 
         return transdict
@@ -293,16 +294,16 @@ class DKFZData:
         for prog in progs:
             # print 'PROG', prog
             pof_dict = self._getPOF(key=prog)
-            pof_dict = marcdict_to_listofdicts(self._pofdict[prog])
+            ##--## pof_dict = marcdict_to_listofdicts(self._pofdict[prog])
 
-            for key in pof_dict.keys():
-                if not self._bibliographic[pubId].has_key(key):
-                        self._bibliographic[pubId][key] = {}
-                        counter = 0
-                
-                self._bibliographic[pubId][key]               = pof_dict[key]
-                self._bibliographic[pubId][key][counter]['x'] = str(counter)
-                counter += 1
+            ##--## for key in pof_dict.keys():
+            ##--##     if not self._bibliographic[pubId].has_key(key):
+            ##--##             self._bibliographic[pubId][key] = {}
+            ##--##             counter = 0
+            ##--##     
+            ##--##     self._bibliographic[pubId][key]               = pof_dict[key]
+            ##--##     self._bibliographic[pubId][key][counter]['x'] = str(counter)
+            ##--##     counter += 1
 
     def _appendBibliographic(self, data):
         """
@@ -358,9 +359,10 @@ class DKFZData:
         """
         Parse data from an xml file into python structures with ElementTree
         """
-        #import xml.etree.ElementTree as ET
-        import ElementTree as ET
+        import xml.etree.ElementTree as ET
+        # import ElementTree as ET
 
+        print filename
         tree = ET.parse(filename)
         root = tree.getroot()
 
