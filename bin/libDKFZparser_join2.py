@@ -189,6 +189,7 @@ class DKFZData:
         transdict['DOI']       =  '#0247_'
         transdict['PMID']      =  '#0247_'
         transdict['MOUSE']     =  '#0247_'
+        transdict['WOS']     =  '#0247_'
 
         transdict['Strtp']     =  '#440_0'
         transdict['Endp']      =  '#epage'
@@ -202,7 +203,19 @@ class DKFZData:
         transdict['KEYWORD']   =  '#65320'
         transdict['Prog']      =  '#Prog'
 
+        #neu fuer BOOKS:
+        transdict['Publisher']      =  '260__b'
+        transdict['ErschIn']      =  '29510a'
+        transdict['Place']      =  '260__a'
+        transdict['Edition']      =  '250__a'
+        transdict['COOP']      =  '#COOPManuell'
+        transdict['Editor']      =  '#Editor700xx'
 
+        #neu fuer PROCEEDINGS, DISS, PATENT etc:
+        transdict['Institution']      =  '502__c'
+        transdict['Faculty']      =  '502__a'
+        transdict['Thesestype']      =  '502__b'
+        transdict['PatNum']      =  '013__a'
         return transdict
 
     def _setupPofDict(self, simulation):
@@ -353,7 +366,7 @@ class DKFZData:
                     self._processKST(bibkey, field, data[key])
                 elif key == 'KEYWORD':
                      self._processKeywords(bibkey, field, data[key])
-                elif key in ['PMID', 'DOI', 'MOUSE']:
+                elif key in ['PMID', 'DOI', 'maus', 'WOS']:
                     self._processIDs(bibkey, field, key, data[key])
                 elif key == 'Feld596':
                     pass
