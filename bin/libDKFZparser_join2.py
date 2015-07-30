@@ -91,20 +91,18 @@ class DKFZData:
 
     def _getAuthority(self, prog, simulation):
 
-        
         if simulation == False:
             import simplejson as json
             from invenio.websubmit_functions.Websubmit_Helpers_hgf import washJSONinput
             from invenio.search_engine import perform_request_search, print_record
             search_str = self._pofsearchdict[prog]
-            #print 'search_string:', search_str
+            # print 'search_string:', search_str
  
             authrec = perform_request_search(p=search_str)
             if len(authrec) == 1:
                jsontext = print_record(authrec[0], format='js')
-               #print jsontext
                jsontext = washJSONinput(jsontext)
-               #print jsontext
+               # print jsontext
                jsondict = json.loads(jsontext, 'utf8')
                return jsondict
                #return authrec[0]
@@ -152,11 +150,16 @@ class DKFZData:
         This prevents database queries for each publication 
         """
         pofsearchdict = {}
-        pofsearchdict[self._KREBSFORSCHUNG] = 'id:311 2015'
-        #pofsearchdict[self._KREBSFORSCHUNG] = 'id:310 2015'
-        #gfr#pofsearchdict[self._HERZ_KREISLAUF] = 'id:321 2015'
-        pofsearchdict[self._HERZ_KREISLAUF] = 'id:320 2015'
-        pofsearchdict[self._PROG_UNGEBUNDEN] = 'id:899 2019'
+        ### pofsearchdict[self._KREBSFORSCHUNG] = 'id:311 2015'
+        ### #pofsearchdict[self._KREBSFORSCHUNG] = 'id:310 2015'
+        ### #gfr#pofsearchdict[self._HERZ_KREISLAUF] = 'id:321 2015'
+        ### pofsearchdict[self._HERZ_KREISLAUF] = 'id:320 2015'
+        ### pofsearchdict[self._PROG_UNGEBUNDEN] = 'id:899 2019'
+
+        # Translate names to proper topic Ids.
+        pofsearchdict[self._KREBSFORSCHUNG]  = 'id:"G:(DE-HGF)POF3-311"'
+        pofsearchdict[self._HERZ_KREISLAUF]  = 'id:"G:(DE-HGF)POF3-321"'
+        pofsearchdict[self._PROG_UNGEBUNDEN] = 'id:"G:(DE-HGF)POF3-899"'
         return pofsearchdict
 
     def _setupTransdict(self):
@@ -306,20 +309,21 @@ class DKFZData:
     def _processProg(self, pubId, field, progs):
 
         for prog in progs:
-            # print 'PROG', prog
-            pof_dict = self._getPOF(key=prog)
-            ##--## pof_dict = marcdict_to_listofdicts(self._pofdict[prog])
+            # pof_dict = self._getPOF(key=prog)
+            pof_dict = self._getAuthority(prog, False)
+            pof_dict = marcdict_to_listofdicts(self._pofdict[prog])
+
+            # print pof_dict
 
             for key in pof_dict.keys():
                  if not self._bibliographic[pubId].has_key(key):
                          self._bibliographic[pubId][key] = {}
-                         #counter = 0
+                         counter = 0
                          #self._bibliographic[pubId][key]['x'] = '0'
-                
                  self._bibliographic[pubId][key]               = pof_dict[key]
-                 #self._bibliographic[pubId][key][counter]['x'] = str(counter)
-                 #self._bibliographic[pubId][key][counter]['x'] = '0'
-                 #counter += 1
+                 self._bibliographic[pubId][key][counter]['x'] = str(counter)
+                 self._bibliographic[pubId][key][counter]['x'] = '0'
+                 counter += 1
 
     def _appendBibliographic(self, data):
         """
