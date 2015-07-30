@@ -109,6 +109,7 @@ class DKFZData:
                return jsondict
                #return authrec[0]
         else: # simulation mode no connection to Invenio
+            print 'Simulation ist True'
             return self._getPOF('Krebsforschung')
 
     def _getPOF(self, key):
@@ -119,26 +120,27 @@ class DKFZData:
         pof = {}
         if key == 'Krebsforschung':
             # TODO  GetFieldsForID('G:(DE-HGF)POF3-311')
-            pof['I536__0'] =  'G:(DE-HGF)POF3-310' 
+            pof['536__0'] =  'G:(DE-HGF)POF3-310' 
             #gfr#pof['I536__0'] =  'G:(DE-HGF)POF3-311' 
-            pof['I536__a'] =  '310 - Krebsforschung (POF3-300)'
+            pof['536__a'] =  '310 - Krebsforschung (POF3-300)'
             #gfr#pof['I536__a'] =  '311 - Signalling pathways, cell and tumor biology (POF3-311)'
-            pof['I536__c'] =  'POF3-300'
+            pof['536__c'] =  'POF3-300'
             #gfr#pof['I536__c'] =  'POF3-311'
-            pof['I536__f'] =  'POF III' 
-            pof['I9131_0'] =  'G:(DE-HGF)POF3-300' 
+            pof['536__f'] =  'POF III' 
+            pof['536__x'] =  '0' 
+            pof['9131_0'] =  'G:(DE-HGF)POF3-300' 
             #gfr#pof['I9131_0'] =  'G:(DE-HGF)POF3-311' 
-            pof['I9131_1'] =  'G:(DE-HGF)POF3' 
+            pof['9131_1'] =  'G:(DE-HGF)POF3' 
             #gfr#pof['I9131_1'] =  'G:(DE-HGF)POF3-310' 
-            pof['I9131_2'] =  'G:(DE-HGF)POF' 
+            pof['9131_2'] =  'G:(DE-HGF)POF' 
             #gfr#pof['I9131_2'] =  'G:(DE-HGF)POF3-300' 
-            pof['I9131_9'] =  'G:(DE-HGF)POF3-310' 
-            pof['I9131_a'] =  'DE-HGF'
+            pof['9131_9'] =  'G:(DE-HGF)POF3-310' 
+            pof['9131_a'] =  'DE-HGF'
             #gfr#pof['I9131_b'] =  'Programmorientierte F\u00f6rderung'
-            pof['I9131_b'] =  'Forschungsbereich Gesundheit'
-            pof['I9131_l'] =  'POF-III'
+            pof['9131_b'] =  'Programmorientierte F\u00f6rderung'
+            pof['9131_l'] =  'POF-III'
             #gfr#pof['I9131_l'] =  'Krebsforschung'
-            pof['I9131_v'] =  'Gesundheit'
+            pof['9131_v'] =  'Gesundheit'
             #gfr#pof['I9131_v'] =  'Signalling pathways, cell and tumor biology'
             # pof['label'] =  '311 - Signalling pathways, cell and tumor biology (POF III: 2015 - 2019)'
             return pof
@@ -308,14 +310,16 @@ class DKFZData:
             pof_dict = self._getPOF(key=prog)
             ##--## pof_dict = marcdict_to_listofdicts(self._pofdict[prog])
 
-            ##--## for key in pof_dict.keys():
-            ##--##     if not self._bibliographic[pubId].has_key(key):
-            ##--##             self._bibliographic[pubId][key] = {}
-            ##--##             counter = 0
-            ##--##     
-            ##--##     self._bibliographic[pubId][key]               = pof_dict[key]
-            ##--##     self._bibliographic[pubId][key][counter]['x'] = str(counter)
-            ##--##     counter += 1
+            for key in pof_dict.keys():
+                 if not self._bibliographic[pubId].has_key(key):
+                         self._bibliographic[pubId][key] = {}
+                         #counter = 0
+                         #self._bibliographic[pubId][key]['x'] = '0'
+                
+                 self._bibliographic[pubId][key]               = pof_dict[key]
+                 #self._bibliographic[pubId][key][counter]['x'] = str(counter)
+                 #self._bibliographic[pubId][key][counter]['x'] = '0'
+                 #counter += 1
 
     def _appendBibliographic(self, data):
         """
