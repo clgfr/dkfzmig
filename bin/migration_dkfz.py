@@ -71,29 +71,29 @@ def PrepareWebsubmit(basedir, data):
         pubtypes = data['3367_']
     else:
         # TODO we need document types in 3367_
-        pubtypes = [{ "0": "PUB:(DE-HGF)1",
+        pubtypes = [{ "0": "PUB:(DE-HGF)16",
                       "2": "PUB:(DE-HGF)",
-                      "a": "Abstract",
-                      "m": "abstract",
+                      "a": "Journal Article",
+                      "m": "journal",
                       "s": "--maintype--"
                     },
                     {
                       "2": "DRIVER",
-                      "a": "conferenceObject"
+                      "a": "article"
                     },
                     {
                       "2": "BibTeX",
-                      "a": "INPROCEEDINGS"
+                      "a": "ARTICLE"
                     },
                     {
                       "0": "33",
                       "2": "EndNote",
-                      "a": "Conference Paper"
+                      "a": "Journal Article"
                     }]
 
     submissiontype = GetSubmissionType(pubtypes)
 
-    create_recid = False
+    create_recid = True
 
     (curdir, form, user_info) = generateCurdir(recid=None, uid=1,
                                                access = data['970__']['a'],
@@ -167,7 +167,8 @@ def main():
 
     # data = DFKZData('../samples/ABSTRACT_AOP.xml')
 
-    basedir = './websubmit'
+    basedir = '/home/sluser/temp/websubmit'
+    #gfr#basedir = './websubmit'
 
     #try:
     #    # we do not have etree on python 2.4!
@@ -176,6 +177,7 @@ def main():
         #data = DKFZData('../samples/ABSTRACT_PUB.xml')
         #data = DKFZData('ABSTRACT_PUB.xml')
 
+    #gfr#data = DKFZData('ABSTRACT_PUB.xml')
     data = DKFZData('../samples/ABSTRACT_AOP.xml')
     #data = DKFZData('ABSTRACT_AOP.xml', simulation=True)
 
