@@ -179,9 +179,9 @@ def main():
         #data = DKFZData('../samples/ABSTRACT_PUB.xml')
         #data = DKFZData('ABSTRACT_PUB.xml')
 
-    #gfr#data = DKFZData('ABSTRACT_PUB.xml')
+    data = DKFZData('ABSTRACT.xml', simulation=False)
     #data = DKFZData('../samples/ABSTRACT_AOP.xml')
-    data = DKFZData('../samples/ABSTRACT_AOP.xml', simulation=False)
+    #data = DKFZData('../samples/BOOK.xml', simulation=False)
 
     #pickle.dump(data, open(dataP, 'wb'))
 
