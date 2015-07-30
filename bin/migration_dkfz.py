@@ -93,7 +93,7 @@ def PrepareWebsubmit(basedir, data):
 
     submissiontype = GetSubmissionType(pubtypes)
 
-    create_recid = True
+    create_recid = False
 
     (curdir, form, user_info) = generateCurdir(recid=None, uid=1,
                                                access = data['970__']['a'],
@@ -102,6 +102,7 @@ def PrepareWebsubmit(basedir, data):
                                                create_recid=create_recid)
     write_file(curdir, 'hgf_release', 'yes')
     write_file(curdir, 'hgf_vdb', 'yes')
+
     write_all_files(curdir, data)
     # 245__ is special, as we have the structured subfield $h that gets
     # flattened in websubmit procedures.
@@ -168,6 +169,7 @@ def main():
     # data = DFKZData('../samples/ABSTRACT_AOP.xml')
 
     basedir = '/home/sluser/temp/websubmit'
+    basedir = '/tmp/websubmit'
     #gfr#basedir = './websubmit'
 
     #try:
@@ -179,7 +181,7 @@ def main():
 
     #gfr#data = DKFZData('ABSTRACT_PUB.xml')
     #data = DKFZData('../samples/ABSTRACT_AOP.xml')
-    data = DKFZData('../samples/ABSTRACT_AOP.xml', simulation=True)
+    data = DKFZData('../samples/ABSTRACT_AOP.xml', simulation=False)
 
     #pickle.dump(data, open(dataP, 'wb'))
 
