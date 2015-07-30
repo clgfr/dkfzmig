@@ -104,6 +104,8 @@ class DKFZData:
                jsontext = washJSONinput(jsontext)
                # print jsontext
                jsondict = json.loads(jsontext, 'utf8')
+               if 'label' in jsondict:
+                   del jsondict['label']
                return jsondict
                #return authrec[0]
         else: # simulation mode no connection to Invenio
