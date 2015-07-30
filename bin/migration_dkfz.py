@@ -178,8 +178,8 @@ def main():
         #data = DKFZData('ABSTRACT_PUB.xml')
 
     #gfr#data = DKFZData('ABSTRACT_PUB.xml')
-    data = DKFZData('../samples/ABSTRACT_AOP.xml')
-    #data = DKFZData('ABSTRACT_AOP.xml', simulation=True)
+    #data = DKFZData('../samples/ABSTRACT_AOP.xml')
+    data = DKFZData('../samples/ABSTRACT_AOP.xml', simulation=True)
 
     #pickle.dump(data, open(dataP, 'wb'))
 
