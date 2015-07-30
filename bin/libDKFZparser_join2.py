@@ -207,6 +207,8 @@ class DKFZData:
         pofdict ={}
         for prog in self._progs:
             pofdict[prog] = self._getAuthority(prog, simulation)
+            if 'label' in pofdict[prog]:
+                del pofdict[prog]['label'] # remove label
         return pofdict
 
     def _processPages(self, bibkey, field, data):
@@ -309,11 +311,7 @@ class DKFZData:
     def _processProg(self, pubId, field, progs):
 
         for prog in progs:
-            # pof_dict = self._getPOF(key=prog)
-            pof_dict = self._getAuthority(prog, False)
             pof_dict = marcdict_to_listofdicts(self._pofdict[prog])
-
-            # print pof_dict
 
             for key in pof_dict.keys():
                  if not self._bibliographic[pubId].has_key(key):
