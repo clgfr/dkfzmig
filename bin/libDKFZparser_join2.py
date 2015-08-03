@@ -90,8 +90,9 @@ class DKFZData:
         return {'2': idtype, 'a': idvalue}
 
     def _getAuthority(self, prog, simulation):
-
+        simulation = False
         if simulation == False:
+            print 'Simulation ist False'
             import simplejson as json
             from invenio.websubmit_functions.Websubmit_Helpers_hgf import washJSONinput
             from invenio.search_engine import perform_request_search, print_record
