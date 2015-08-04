@@ -243,6 +243,37 @@ class DKFZData:
 
         self._bibliographic[bibkey][field].update(content)
 
+
+    def _nameInsertComma(name):
+        """
+        Some names from old datasets do not contain a , even though they are
+        ordered lastname firstname. Try to guess those cases by assuming that if
+        the first part of a name is longer than the rest, it is the last name.
+        (Noone will Cite Hans M. if Hans is the first name)
+
+        This may fail for our friends from Asia
+        """
+        i = 0
+        idxmaxlength = 0
+        maxlength    = 0
+        if not ',' in name:
+            # If we have no , in the name...
+            nameparts = name.split(' ')
+            for part in nameparts:
+                if len(part) > maxlength:
+                    idxmaxlength = i
+                    maxlength = len(part)
+                i += 1
+
+            if idxmaxlength == 0:
+                # ... check if the first part is the longest part in a name. If
+                # so, assume that the , is missing after the lastname.
+                newname = nameparts[0] + ', '
+                del nameparts[0]
+                newname += ' '.join(nameparts)
+
+        return newname
+
     def _processAuthors(self, pubId, authors):
     
         auth_list = []
@@ -251,7 +282,9 @@ class DKFZData:
         for author in authors:
             
             pos    = author['pos']
-            name   = NormalizeName(author['name'])
+            name   = author['name']
+
+            name   = self._nameInsertComma(NormalizeName(author['name']))
             isDKFZ = author['IsDKFZ']
 
             if isDKFZ == True:
