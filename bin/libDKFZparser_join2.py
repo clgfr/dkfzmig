@@ -215,8 +215,7 @@ class DKFZData:
 
         #neu fuer PROCEEDINGS, DISS, PATENT etc:
         transdict['Institution']      =  '502__c'
-        transdict['Faculty']      =  '502__a'
-        transdict['Thesestype']      =  '502__b'
+        transdict['Degree']      =  '502__b'
         transdict['PatNum']      =  '013__a'
         return transdict
 
