@@ -23,7 +23,7 @@ Migration script for DFKZ
 """
 
 # Variable naming conventions: we use Uppercase for function names:
-# pylint: disable-msg=C0103
+# pylint: disable=C0103
 
 #import argparse
 import logging
@@ -45,9 +45,6 @@ def GetSubmissionType(pubtypes):
     for pubtype in pubtypes:
         if 's' in pubtype:
             submissiontype = pubtype['m']
-
-    # TODO should we handle more than one submission type?
-
     return submissiontype
 
 
@@ -66,10 +63,10 @@ def PrepareWebsubmit(basedir, data):
         generateCurdir,                                           \
         prepareUpload
     from invenio.websubmit_functions.Websubmit_Helpers_hgf import \
-        write_done_file,                                          \
         write_file,                                               \
-        write_json,                                               \
         write_all_files
+        # write_done_file,                                          \
+        # write_json,                                               \
 
     create_recid = False
     if '3367_' in data:
@@ -107,7 +104,8 @@ def PrepareWebsubmit(basedir, data):
                                                    mode='MBI',
                                                    type=submissiontype,
                                                    create_recid=create_recid)
-        os.remove(glob.glob('%s/%s' % (curdir, 'hgf_*')))
+        for f in glob.glob('%s/%s' % (curdir, 'hgf_*')):
+            os.remove(f)
     else:
         (curdir, form, user_info) = generateCurdir(recid=None, uid=1,
                                                    access = data['970__']['a'],
@@ -174,9 +172,6 @@ def main():
     """
     """
     logger.info("Entering main")
-    import cPickle as pickle
-
-    dataP = 'data.p'
 
     # AOP == Ahead of Print?
     # Abstract = Abstract submissions?
@@ -194,19 +189,16 @@ def main():
         #data = DKFZData('../samples/ABSTRACT_PUB.xml')
         #data = DKFZData('ABSTRACT_PUB.xml')
 
-    data = DKFZData('ABSTRACT.xml', simulation=False)
-    #data = DKFZData('../samples/ABSTRACT_AOP.xml')
+    # data = DKFZData('ABSTRACT.xml', simulation=False)
+    data = DKFZData('../samples/ABSTRACT_AOP.xml')
     #data = DKFZData('../samples/BOOK.xml', simulation=False)
 
-    #pickle.dump(data, open(dataP, 'wb'))
 
-    import pprint
+    # import pprint
     for key in data.getBibliographic():
         print key
         #pprint.pprint(data.getBibliographic()[key])
         PrepareWebsubmit(basedir, data.getBibliographic()[key])
-        # TODO remove:
-        #die
 
     Pack4Upload(basedir, '/tmp/batch', packagesize=1000)
 
