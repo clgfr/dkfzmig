@@ -58,7 +58,11 @@ def PrepareWebsubmit(basedir, data):
 
     @param basedir: base for the curdir structure of Invenio
     """
-    from invenio.libwebsubmit_hgf import                          \
+    import os
+    import glob
+    from invenio.search_engine                             import \
+        perform_request_search
+    from invenio.libwebsubmit_hgf                          import \
         generateCurdir,                                           \
         prepareUpload
     from invenio.websubmit_functions.Websubmit_Helpers_hgf import \
@@ -67,6 +71,7 @@ def PrepareWebsubmit(basedir, data):
         write_json,                                               \
         write_all_files
 
+    create_recid = False
     if '3367_' in data:
         pubtypes = data['3367_']
     else:
@@ -90,16 +95,26 @@ def PrepareWebsubmit(basedir, data):
                       "2": "EndNote",
                       "a": "Journal Article"
                     }]
-
     submissiontype = GetSubmissionType(pubtypes)
 
-    create_recid = False
+    existingRecid = perform_request_search(p='970__a:"%s"' % data['970__']['a'])
 
-    (curdir, form, user_info) = generateCurdir(recid=None, uid=1,
-                                               access = data['970__']['a'],
-                                               basedir=basedir, mode='SBI',
-                                               type=submissiontype,
-                                               create_recid=create_recid)
+    if len(existingRecid) > 0:
+        (curdir, form, user_info) = generateCurdir(recid=existingRecid[0],
+                                                   uid=1,
+                                                   access=data['970__']['a'],
+                                                   basedir=basedir,
+                                                   mode='MBI',
+                                                   type=submissiontype,
+                                                   create_recid=create_recid)
+        os.remove(glob.glob('%s/%s' % (curdir, 'hgf_*')))
+    else:
+        (curdir, form, user_info) = generateCurdir(recid=None, uid=1,
+                                                   access = data['970__']['a'],
+                                                   basedir=basedir, mode='SBI',
+                                                   type=submissiontype,
+                                                   create_recid=create_recid)
+
     write_file(curdir, 'hgf_release', 'yes')
     write_file(curdir, 'hgf_vdb', 'yes')
 
