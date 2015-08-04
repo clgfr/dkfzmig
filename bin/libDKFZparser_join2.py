@@ -257,6 +257,7 @@ class DKFZData:
         i = 0
         idxmaxlength = 0
         maxlength    = 0
+        newname      = name
         if not ',' in name:
             # If we have no , in the name...
             nameparts = name.split(' ')
