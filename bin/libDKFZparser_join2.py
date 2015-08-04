@@ -245,7 +245,7 @@ class DKFZData:
         self._bibliographic[bibkey][field].update(content)
 
 
-    def _nameInsertComma(name):
+    def _nameInsertComma(self, name):
         """
         Some names from old datasets do not contain a , even though they are
         ordered lastname firstname. Try to guess those cases by assuming that if
