@@ -208,9 +208,10 @@ class DKFZData:
         transdict['Publisher']      =  '260__b'
         transdict['ErschIn']      =  '29510a'
         transdict['Place']      =  '260__a'
+        transdict['Pages']      =  '300__a'
         transdict['Edition']      =  '250__a'
         transdict['COOP']      =  '#COOPManuell'
-        transdict['Editor']      =  '#Editor700xx'
+        #TODO#gfr#transdict['Editor']      =  '#Editor700xx'
 
         #neu fuer PROCEEDINGS, DISS, PATENT etc:
         transdict['Institution']      =  '502__c'
