@@ -53,29 +53,37 @@ def PrepareWebsubmit(basedir, data, submissiontype, submissionrole):
         # write_done_file,                                          \
         # write_json,                                               \
 
-    create_recid = False
+    create_recid = True
 
     if submissionrole == 'EDITOR':
         # FIXME for EDITOR we need proper uid of an editor. Till now dkfz
         # database has no editors however
-        submissionuid = 1
+        submissionuid = 2
     if submissionrole == 'STAFF':
         submissionuid = 1
 
     existingRecid = perform_request_search(p='970__a:"%s"' % data['970__']['a'])
 
     if len(existingRecid) > 0:
-        (curdir, form, user_info) = generateCurdir(recid=existingRecid[0],
+        print "-------------------"
+        print existingRecid
+        print submissionuid
+        print data['970__']['a']
+        print basedir
+        print submissiontype
+        print create_recid
+        (curdir, form, user_info) = generateCurdir(recid=exisingRecid[0],
                                                    uid=submissionuid,
                                                    access=data['970__']['a'],
                                                    basedir=basedir,
-                                                   mode='MBI',
-                                                   type=submissiontype,
-                                                   create_recid=create_recid)
+                                                   mode='MBI')
+        print "curdir:", curdir
         for f in glob.glob('%s/%s' % (curdir, 'hgf_*')):
             os.remove(f)
+        write_file(curdir, 'doctype', submissiontype)
     else:
-        (curdir, form, user_info) = generateCurdir(recid=None, uid=1,
+        (curdir, form, user_info) = generateCurdir(recid=None,
+                                                   uid=submissionuid,
                                                    access = data['970__']['a'],
                                                    basedir=basedir, mode='SBI',
                                                    type=submissiontype,
@@ -183,7 +191,6 @@ def main():
 
     logger.info("Starting conversion")
 
-    basedir = '/home/sluser/temp/websubmit'
     basedir = '/tmp/websubmit'
 
     sampledir = '../samples/'
