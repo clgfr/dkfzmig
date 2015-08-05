@@ -111,8 +111,18 @@ def RoleAndTypeMapping():
     # Note due to historical reasons websubmit does not use pubtype
     # identifiers but its own naming convention.
     pubtype = {}
-    pubtype['ABSTRACT'] = 'abstract'
-    pubtype['ARTICLE']  = 'journal'
+    pubtype['ABSTRACT']     = 'abstract'
+    pubtype['ARTICLE']      = 'journal'
+    pubtype['BACHELOR']     = 'bachelor'
+    pubtype['BOOK']         = 'book'
+    pubtype['BOOK_CHAPTER'] = 'contb'
+    pubtype['COURSE']       = 'course'
+    pubtype['DIPL']         = 'diploma'
+    pubtype['DISS']         = 'phd'
+    pubtype['HABIL']        = 'habil'
+    pubtype['MASTER']       = 'master'
+    pubtype['PATENT']       = 'patent'
+    pubtype['PROCEEDING']   = 'contrib'
 
     for role in submissionrole:
         logger.info('If filename contains %s (= %s) submit as %s' %
