@@ -25,7 +25,7 @@ Migration script for DFKZ
 # Variable naming conventions: we use Uppercase for function names:
 # pylint: disable=C0103
 
-#import argparse
+import argparse
 import logging
 import sys
 logging.basicConfig()
@@ -33,22 +33,7 @@ logger = logging.getLogger(__name__)
 
 from libDKFZparser_join2 import DKFZData
 
-def GetSubmissionType(pubtypes):
-    """
-    Derive the submission type, ie. the type we would use in websubmit
-
-    @param pubtypes: list of dicts containing pubtypes
-    """
-
-    submissiontype = ''
-
-    for pubtype in pubtypes:
-        if 's' in pubtype:
-            submissiontype = pubtype['m']
-    return submissiontype
-
-
-def PrepareWebsubmit(basedir, data):
+def PrepareWebsubmit(basedir, data, submissiontype, submissionrole):
     """
     Prepare records for websubmission. This should build up the proper
     submission structure and run up to creation of `recmysql`.
@@ -69,36 +54,19 @@ def PrepareWebsubmit(basedir, data):
         # write_json,                                               \
 
     create_recid = False
-    if '3367_' in data:
-        pubtypes = data['3367_']
-    else:
-        # TODO we need document types in 3367_
-        pubtypes = [{ "0": "PUB:(DE-HGF)16",
-                      "2": "PUB:(DE-HGF)",
-                      "a": "Journal Article",
-                      "m": "journal",
-                      "s": "--maintype--"
-                    },
-                    {
-                      "2": "DRIVER",
-                      "a": "article"
-                    },
-                    {
-                      "2": "BibTeX",
-                      "a": "ARTICLE"
-                    },
-                    {
-                      "0": "33",
-                      "2": "EndNote",
-                      "a": "Journal Article"
-                    }]
-    submissiontype = GetSubmissionType(pubtypes)
+
+    if submissionrole == 'EDITOR':
+        # FIXME for EDITOR we need proper uid of an editor. Till now dkfz
+        # database has no editors however
+        submissionuid = 1
+    if submissionrole == 'STAFF':
+        submissionuid = 1
 
     existingRecid = perform_request_search(p='970__a:"%s"' % data['970__']['a'])
 
     if len(existingRecid) > 0:
         (curdir, form, user_info) = generateCurdir(recid=existingRecid[0],
-                                                   uid=1,
+                                                   uid=submissionuid,
                                                    access=data['970__']['a'],
                                                    basedir=basedir,
                                                    mode='MBI',
@@ -124,62 +92,118 @@ def PrepareWebsubmit(basedir, data):
 
     return
 
-def Pack4Upload(basedir, batchdir, packagesize=1000):
+def RoleAndTypeMapping():
     """
-    Pack all files from our webmodifications to larger bunches to upload them in
-    one go. This saves significant time and keeps the bibsched queue short in
-    case we have many uploads to process.
+    Print boilerplate with descriptions of the input files
 
-    Note that we need to keep batchdir as the acutal upload is asynchronous.
-    So bibupload needs to find it's files probably a lot later (say the queue
-    is on halt) otherwise it will die.
-    Here we use a subdir of /tmp and rely on *nix for the house keeping of
-    /tmp. For very long delays this might fail as *nix will clean up. If we
-    have a huge number of files and are tight on disk space this might also
-    result in trouble.
-
-    @type basedir: string / path
-    @param basedir: base of the websubmission tree, where we extract the
-                    recmysql-xml-files from
-    @type uploaddir: string / path
-    @param uploaddir: dir where to place our bunch files in
-    @type packagesize: integer
-    @param packagesize: number of records to pack into one bunch
-
+    Return mappings of file name parts to role and pubtype
     """
-    from os import listdir, makedirs
-    from shutil import rmtree
-    import invenio.libwebsubmit_hgf  as webmodify
+    logger.info("Setting up role and pubtype mappings")
 
-    try:
-        rmtree(batchdir)
-    except OSError:
-        pass
-    makedirs(batchdir)
+    submissionrole = {}
+    submissionrole['AOP'] = 'EDITOR'
+    submissionrole['PUB'] = 'STAFF'
 
-    webmodify.pack_files(batchdir, basedir, pack_no=packagesize)
-    for xmlfile in listdir(batchdir):
-        # upload2invenio does not need form or user_info. They are just there
-        # for compatiblity issues in the rest of invenios code.
-        webmodify.upload2invenio(dir=batchdir,
-                                 form='', user_info='',
-                                 filename=xmlfile)
+    descr = {}
+    descr['AOP']   = 'Ahead of print'
+    descr['PUB']   = 'Published article'
 
-    return
+    # Note due to historical reasons websubmit does not use pubtype
+    # identifiers but its own naming convention.
+    pubtype = {}
+    pubtype['ABSTRACT'] = 'abstract'
+    pubtype['ARTICLE']  = 'journal'
+
+    for role in submissionrole:
+        logger.info('If filename contains %s (= %s) submit as %s' %
+                      (role, descr[role], submissionrole[role]))
+
+    for typ in pubtype:
+        logger.info('If filename contains %s use pubtype %s' %
+                      (typ, pubtype[typ]))
+
+    return submissionrole, pubtype
+
+def GetFiles2Process(directory, criterion, pubtype):
+    """
+    Get all files in direcotry and return those matching the (glob) criterion
+
+    @param directory: dir to scan
+    @param criterion: glob files to process have to match
+    """
+    import glob
+    logger.info("Scanning %s for files matching %s" % (directory, criterion))
+
+    allfiles = glob.glob('%s/%s' % (directory, criterion))
+    files2process = []
+    for f in allfiles:
+        for typ in pubtype:
+            if typ in f:
+                files2process.append(f)
+
+    for f in files2process:
+        logger.info("Inputfile found: %s" %f)
+
+    return files2process
+
+def GetSubmissionType(filename, pubtype, defaultvalue):
+    """
+    Derive the submission type, ie. the type we would use in websubmit
+
+    @param filename: scan which key in pubtypes matches
+    @param pubtypes: list of dicts containing pubtypes
+    @param defaultvalue: if none matches return this
+    """
+
+    logger.debug("Checking %s for %s" % (filename, str(pubtype)))
+
+    res = defaultvalue
+    for typ in pubtype:
+        if typ in filename:
+            res = pubtype[typ]
+
+    return res
 
 #======================================================================
 def main():
     """
+    Process all files in a given dir and websubmit them.
     """
-    logger.info("Entering main")
+    from invenio.libRelease2OpenAccess import UploadBatches
 
-    # AOP == Ahead of Print?
-    # Abstract = Abstract submissions?
-
-    # data = DFKZData('../samples/ABSTRACT_AOP.xml')
+    logger.info("Starting conversion")
 
     basedir = '/home/sluser/temp/websubmit'
     basedir = '/tmp/websubmit'
+
+    sampledir = '../samples/'
+
+    logger.info("Base dir: %s" % basedir)
+    logger.info("Sample dir: %s" % sampledir)
+
+    submissionrole, pubtype = RoleAndTypeMapping()
+    files2process = GetFiles2Process(sampledir, '*.xml', pubtype)
+
+    for f in files2process:
+        logger.info("Processing file: %s" % f)
+        subtype = GetSubmissionType(f, pubtype, 'journal')
+        subrole = GetSubmissionType(f, submissionrole, 'STAFF')
+        logger.info("Submission type: %s" % subtype)
+        logger.info("Submission role: %s" % subrole)
+
+        data = DKFZData(f)
+
+        for key in data.getBibliographic():
+            print key
+            #pprint.pprint(data.getBibliographic()[key])
+            PrepareWebsubmit(basedir, data.getBibliographic()[key],
+                             subtype, subrole)
+
+        UploadBatches(basedir, '/tmp/batch', packagesize=1000)
+
+
+    # data = DFKZData('../samples/ABSTRACT_AOP.xml')
+
     #gfr#basedir = './websubmit'
 
     #try:
@@ -189,30 +213,26 @@ def main():
         #data = DKFZData('../samples/ABSTRACT_PUB.xml')
         #data = DKFZData('ABSTRACT_PUB.xml')
 
-    # data = DKFZData('ABSTRACT.xml', simulation=False)
-    data = DKFZData('../samples/ABSTRACT_AOP.xml')
-    #data = DKFZData('../samples/BOOK.xml', simulation=False)
+    ##--## # data = DKFZData('ABSTRACT.xml', simulation=False)
+    ##--## data = DKFZData('../samples/ABSTRACT_AOP.xml')
+    ##--## #data = DKFZData('../samples/BOOK.xml', simulation=False)
 
 
-    # import pprint
-    for key in data.getBibliographic():
-        print key
-        #pprint.pprint(data.getBibliographic()[key])
-        PrepareWebsubmit(basedir, data.getBibliographic()[key])
+    ##--## # import pprint
+    ##--## for key in data.getBibliographic():
+    ##--##     print key
+    ##--##     #pprint.pprint(data.getBibliographic()[key])
+    ##--##     PrepareWebsubmit(basedir, data.getBibliographic()[key])
 
-    Pack4Upload(basedir, '/tmp/batch', packagesize=1000)
+    ##--## Pack4Upload(basedir, '/tmp/batch', packagesize=1000)
 
     return
 
 if __name__ == '__main__':
-    main()
-    sys.exit(0)
-
     parser = argparse.ArgumentParser()
     parser.add_argument('--verbose', '-v', default = 0, action='count')
     args = parser.parse_args()
 
-    logger.info('Migrating data for DFZK')
 
     if args.verbose == 0:
         # Default
@@ -223,6 +243,10 @@ if __name__ == '__main__':
         log_level = logging.DEBUG
     else:
         log_level = logging.ERROR
-    logger.setLevel(log_level)
-    main()
 
+    logger.setLevel(logging.INFO)
+
+    logger.info('Migrating data for DKFZ')
+
+    main()
+    sys.exit(0)
