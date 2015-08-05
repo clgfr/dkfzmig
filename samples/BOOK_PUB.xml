@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datei>
+  <row>
+    <publishedID>47452</publishedID>
+    <Artikel>Opening Science,The Evolving Guide on How the Internet is Changing Research, Collaboration and Scholarly Publishing</Artikel>
+    <PubYear>2014</PubYear>
+    <Publisher>Springer</Publisher>
+    <Author Pos="0" name="Bartling, S" IsDKFZ="1"/>
+    <Author Pos="1" name="Friesike, S" IsDKFZ="0"/>
+    <KST>E014</KST>
+    <Prog>Krebsforschung</Prog>
+  </row>
+  <row>
+    <publishedID>56381</publishedID>
+    <Artikel>Physiologie 6, Herz und Kreislauf</Artikel>
+    <PubYear>2014</PubYear>
+    <Publisher>MEDI-LEARN Verlag GbR</Publisher>
+    <Author Pos="0" name="Fischer, A." IsDKFZ="1"/>
+    <Author Pos="1" name="PD Dr. med." IsDKFZ="0"/>
+    <Edition>6. Auflage</Edition>
+    <Place>Marburg</Place>
+    <KST>A270</KST>
+    <Prog>Herz-Kreislauf</Prog>
+  </row>
+</datei>
