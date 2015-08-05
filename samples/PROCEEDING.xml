@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datei>
+  <row>
+    <publishedID>48561</publishedID>
+    <Artikel>Removing blooming artifacts with binarized deconvolution in cardiac CT</Artikel>
+    <ErschIn>SPIE Medical Imaging Conference Program, 9033-17, / SPIE[Ed.]</ErschIn>
+    <PubYear>2014</PubYear>
+    <Author Pos="0" name="Hofmann,C." IsDKFZ="0"/>
+    <Author Pos="1" name="Knaup,M." IsDKFZ="1"/>
+    <Author Pos="2" name="Kachelriess,M." IsDKFZ="1"/>
+    <KST>E020</KST>
+    <KST>E025</KST>
+    <Prog>Krebsforschung</Prog>
+  </row>
+</datei>

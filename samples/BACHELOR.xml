@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<datei>
+  <row>
+    <publishedID>842</publishedID>
+    <Artikel>Einfluss humaner Papillomviren auf die Schwangerschaft und Bedeutung der Parvoviren bei der Krebssuppression</Artikel>
+    <PubYear>2003</PubYear>
+    <Institution>FH Lausitz, Studiengang Biotechnologie</Institution>
+    <Author Pos="0" name="Zscheppang,K." IsDKFZ="1"/>
+    <KST>XXX</KST>
+    <Prog>Krebsforschung</Prog>
+    <KEYWORD>GENE</KEYWORD>
+    <KEYWORD>PROTEIN</KEYWORD>
+    <KEYWORD>HPV</KEYWORD>
+    <KEYWORD>CHICKEN</KEYWORD>
+  </row>
+  <row>
+    <publishedID>55741</publishedID>
+    <Artikel>Die Bedeutung von Histon Deacetylase 11 fuer die Malignitaet der Neuroblastom-Zelllinie BE(2)-C</Artikel>
+    <PubYear>2007</PubYear>
+    <Place>Senftenberg</Place>
+    <Institution>Fachhochschule Lausitz-Biotechnologie</Institution>
+    <Author Pos="0" name="Pickert, D" IsDKFZ="1"/>
+    <KST>XX</KST>
+    <Prog>Krebsforschung</Prog>
+  </row>
+  <row>
+    <publishedID>51411</publishedID>
+    <Artikel>Der Zusammenhang zwischen Krebserkrankungen und Adipositas</Artikel>
+    <PubYear>2014</PubYear>
+    <Place>Heidelberg</Place>
+    <Institution>Universitaet Heidelberg-Medizinische Fakultaet</Institution>
+    <Author Pos="0" name="Weis,H." IsDKFZ="1"/>
+    <KST>X</KST>
+    <Prog>Krebsforschung</Prog>
+  </row>
+</datei>
