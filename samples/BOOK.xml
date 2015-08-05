@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datei>
+  <row>
+    <publishedID>45952</publishedID>
+    <Artikel>Lupus erythematosus</Artikel>
+    <PubYear>2013</PubYear>
+    <Publisher>Springer Verlag</Publisher>
+    <Author Pos="0" name="Kuhn A" IsDKFZ="0"/>
+    <Author Pos="1" name="Landmann A." IsDKFZ="1"/>
+    <Author Pos="2" name="Katsambas A" IsDKFZ="0"/>
+    <Author Pos="3" name="Lotti T" IsDKFZ="0"/>
+    <Author Pos="4" name="Dessinioti C" IsDKFZ="0"/>
+    <Author Pos="5" name="Massimilano A." IsDKFZ="0"/>
+    <Place>Heidelberg</Place>
+    <KST>D030</KST>
+    <Prog>Krebsforschung</Prog>
+  </row>
+</datei>
