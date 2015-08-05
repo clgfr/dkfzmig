@@ -179,7 +179,7 @@ def main():
     """
     Process all files in a given dir and websubmit them.
     """
-    from invenio.libRelease2OpenAccess import UploadBatches
+    from invenio.libRelease2OpenAccess_join2 import UploadBatches
 
     logger.info("Starting conversion")
 
@@ -210,31 +210,6 @@ def main():
                              subtype, subrole)
 
         UploadBatches(basedir, '/tmp/batch', packagesize=1000)
-
-
-    # data = DFKZData('../samples/ABSTRACT_AOP.xml')
-
-    #gfr#basedir = './websubmit'
-
-    #try:
-    #    # we do not have etree on python 2.4!
-    #    data = pickle.load(open(dataP, 'rb'))
-    #except:
-        #data = DKFZData('../samples/ABSTRACT_PUB.xml')
-        #data = DKFZData('ABSTRACT_PUB.xml')
-
-    ##--## # data = DKFZData('ABSTRACT.xml', simulation=False)
-    ##--## data = DKFZData('../samples/ABSTRACT_AOP.xml')
-    ##--## #data = DKFZData('../samples/BOOK.xml', simulation=False)
-
-
-    ##--## # import pprint
-    ##--## for key in data.getBibliographic():
-    ##--##     print key
-    ##--##     #pprint.pprint(data.getBibliographic()[key])
-    ##--##     PrepareWebsubmit(basedir, data.getBibliographic()[key])
-
-    ##--## Pack4Upload(basedir, '/tmp/batch', packagesize=1000)
 
     return
 
