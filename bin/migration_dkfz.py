@@ -72,7 +72,7 @@ def PrepareWebsubmit(basedir, data, submissiontype, submissionrole):
         print basedir
         print submissiontype
         print create_recid
-        (curdir, form, user_info) = generateCurdir(recid=exisingRecid[0],
+        (curdir, form, user_info) = generateCurdir(recid=existingRecid[0],
                                                    uid=submissionuid,
                                                    access=data['970__']['a'],
                                                    basedir=basedir,
