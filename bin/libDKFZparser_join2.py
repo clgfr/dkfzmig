@@ -285,7 +285,7 @@ class DKFZData:
             pos    = author['pos']
             name   = author['name']
 
-            name   = self._nameInsertComma(NormalizeName(author['name']))
+            name   = NormalizeName(self._nameInsertComma(author['name']))
             isDKFZ = author['IsDKFZ']
 
             if isDKFZ == True:
