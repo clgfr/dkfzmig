@@ -153,13 +153,19 @@ def GetFiles2Process(directory, criterion, pubtype):
     logger.info("Scanning %s for files matching %s" % (directory, criterion))
 
     allfiles = glob.glob('%s/%s' % (directory, criterion))
-    files2process = []
-    for f in allfiles:
-        for typ in pubtype:
-            if typ in f:
-                files2process.append(f)
 
-    for f in files2process:
+    print allfiles
+    print pubtype
+
+    files2process = []
+    filesunique   = {}
+    for f in allfiles:
+        for typ in sorted(pubtype, reverse=True):
+            if typ in f:
+                filesunique[f] = 1
+
+    for f in filesunique:
+        files2process.append(f)
         logger.info("Inputfile found: %s" %f)
 
     return files2process
@@ -176,9 +182,14 @@ def GetSubmissionType(filename, pubtype, defaultvalue):
     logger.debug("Checking %s for %s" % (filename, str(pubtype)))
 
     res = defaultvalue
-    for typ in pubtype:
-        if typ in filename:
+    NotMatched = True
+    # sort longest type first
+    for typ in sorted(pubtype, reverse=True):
+        if (typ in filename) and (NotMatched):
+            # Match only if we did not have a _longer_ match
+            # BOOK vs. BOOK_CHAPTER => BOOK_CHAPTER is correct
             res = pubtype[typ]
+            NotMatched = False
 
     return res
 
@@ -187,16 +198,33 @@ def main():
     """
     Process all files in a given dir and websubmit them.
     """
+    import os
+    import shutil
     from invenio.libRelease2OpenAccess_join2 import UploadBatches
 
     logger.info("Starting conversion")
 
-    basedir = '/tmp/websubmit'
-
+    basedir   = '/tmp/websubmit'
+    batchdir  = '/tmp/batch'
     sampledir = '../samples/'
+
 
     logger.info("Base dir: %s" % basedir)
     logger.info("Sample dir: %s" % sampledir)
+
+    logger.info("Removing old dirs")
+    try:
+        shutil.rmtree(basedir)
+        shutil.rmtree(batchdir)
+    except:
+        logger.error("Can not delete dirs")
+    logger.info("Creating %s and %s" %(basedir, batchdir))
+    try:
+        os.makedirs(basedir)
+        os.makedirs(batchdir)
+    except:
+        logger.error("Can not create dirs")
+
 
     submissionrole, pubtype = RoleAndTypeMapping()
     files2process = GetFiles2Process(sampledir, '*.xml', pubtype)
@@ -216,7 +244,7 @@ def main():
             PrepareWebsubmit(basedir, data.getBibliographic()[key],
                              subtype, subrole)
 
-        UploadBatches(basedir, '/tmp/batch', packagesize=1000)
+    UploadBatches(basedir, batchdir, packagesize=1000)
 
     return
 
