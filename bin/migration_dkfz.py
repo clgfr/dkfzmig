@@ -58,6 +58,8 @@ def PrepareWebsubmit(basedir, data, submissiontype, submissionrole):
     if submissionrole == 'EDITOR':
         # FIXME for EDITOR we need proper uid of an editor. Till now dkfz
         # database has no editors however
+        # Check group EDITORS and select one. Probably we can correlate it with
+        # the institute.
         submissionuid = 2
     if submissionrole == 'STAFF':
         submissionuid = 1
@@ -65,19 +67,17 @@ def PrepareWebsubmit(basedir, data, submissiontype, submissionrole):
     existingRecid = perform_request_search(p='970__a:"%s"' % data['970__']['a'])
 
     if len(existingRecid) > 0:
-        print "-------------------"
-        print existingRecid
-        print submissionuid
-        print data['970__']['a']
-        print basedir
-        print submissiontype
-        print create_recid
         (curdir, form, user_info) = generateCurdir(recid=existingRecid[0],
                                                    uid=submissionuid,
                                                    access=data['970__']['a'],
                                                    basedir=basedir,
                                                    mode='MBI')
-        print "curdir:", curdir
+        if curdir == '':
+            logger.error('Insufficient permissions to modify %s for uid %i' %
+                        (existingRecid[0],  submissionuid))
+            logger.error('Most likely STAFF permissions are required.')
+            logger.error('Record not updated %s', existingRecid[0])
+            return
         for f in glob.glob('%s/%s' % (curdir, 'hgf_*')):
             os.remove(f)
         write_file(curdir, 'doctype', submissiontype)
