@@ -202,6 +202,8 @@ class DKFZData:
 
         #transdict['KEYWORD']  =  '#KEYWORD' # 65320
         transdict['KEYWORD']   =  '#65320'
+###TODO###DKFZ has two categories of journal article: original article and review
+        #TODO#transdict['Original']   =  '#65320'
         transdict['Prog']      =  '#Prog'
 
         #neu fuer BOOKS:
