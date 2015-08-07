@@ -5,7 +5,10 @@
     <Artikel>Comparison of 68Ga-DOTATOC biodistribution in patients with and without spleenectomy</Artikel>
     <Journal>Quarterly Journal of Nuclear Medicine and Molecular Imaging</Journal>
     <PubYear>2015</PubYear>
+    <Feld596>59 (1), 116-120</Feld596>
     <PubVol>59</PubVol>
+    <Strtp>116</Strtp>
+    <Endp>1</Endp>
     <PubIss>1</PubIss>
     <Author Pos="0" name="Kratochwil,C." IsDKFZ="1"/>
     <Author Pos="1" name="Mavriopoulou,E." IsDKFZ="1"/>
@@ -17,7 +20,95 @@
     <Author Pos="7" name="Haberkorn,U." IsDKFZ="1"/>
     <Author Pos="8" name="Giesel,F.L." IsDKFZ="1"/>
     <PMID>24382404</PMID>
-    <KST>x</KST>
+    <KST>E060</KST>
+    <Prog>Krebsforschung</Prog>
+  </row>
+  <row>
+    <publishedID>59342</publishedID>
+    <Artikel>Phosphorylation of AKT(Ser473) serves as an independent prognostic marker for radiosensitivity in advanced head and neck squamous cell carcinoma</Artikel>
+    <Journal>International Journal of Cancer</Journal>
+    <ABSTr>Head and neck squamous cell carcinoma (HNSCC) is frequently characterized by high resistance to radiotherapy, which critically depends on both altered signaling pathways within tumor cells and their dynamic interaction with the tumor microenvironment. This study evaluated the prognostic value of the phosphorylation status of AKT on Ser473 and Thr308 for the clinical outcome of patients with advanced HNSCC on radiotherapy. Furthermore, we investigated the impact of AKT(Ser473) phosphorylation [p-AKT(Ser473)] in the context of radioresistance using ex vivo tissue cultures that resemble the complex tissue architecture and paracrine interaction with the tumor microenvironment. In a cohort of 120 patients with advanced HNSCC, who were treated with primary or adjuvant radiotherapy, a significant association was found between relative p-AKT(Ser473) levels and overall survival (p=0.006) as well as progression-free survival (p=0.021), while no significant correlation was revealed for relative p-AKT(Thr308) levels. In ex vivo tissue cultures p-AKT(Ser473) levels were increased upon irradiation and treatment with the PI3K inhibitor LY294002 inhibited both basal and irradiation induced AKT(Ser473) phosphorylation. Strikingly, pretreatment with LY294002 sensitized tissue cultures derived from primary and recurrent tumors to radiotherapy as determined by impaired tumor cell proliferation and enhanced DNA damage. In conclusion, phosphorylation status of AKT(Ser473) in tumor specimens serves as a novel biomarker to identify patients with advanced HNSCC at high risk for treatment failure following radiotherapy, and our data from ex vivo tissue cultures support the assumption that pharmacological inhibition of AKT(Ser473) phosphorylation might circumvent radioresistance to improve efficiency and reduce toxicity of current treatment modalities.
+
+What's new? Patients with head and neck squamous cell cancers often develop resistance to radiotherapy. To figure out how, these authors investigated AKT phosphorylation in the tumor cells. AKT kinase boosts cell proliferation when it is activated by phosphorylation at two possible sites. Could the location of phosphorylation predict whether the tumor will develop resistance? These results suggest it could. The authors show that patients with more phosphorylation at serine 473 had worse survival; furthermore, they showed that reducing phosphorylation at this site increased cancer cells' vulnerability to irradiation. Phosphorylation at the other site, threonine 308, did not affect survival.</ABSTr>
+    <PubYear>2015</PubYear>
+    <PubVol>136</PubVol>
+    <PubIss>12</PubIss>
+    <Strtp>2775</Strtp>
+    <Endp>2785</Endp>
+    <Author Pos="0" name="Freudlsperger, C." IsDKFZ="0"/>
+    <Author Pos="1" name="Horn, D." IsDKFZ="0"/>
+    <Author Pos="2" name="Weissfuss, S." IsDKFZ="0"/>
+    <Author Pos="3" name="Weichert, W." IsDKFZ="0"/>
+    <Author Pos="4" name="Weber, K. J." IsDKFZ="0"/>
+    <Author Pos="5" name="Saure, D." IsDKFZ="0"/>
+    <Author Pos="6" name="Sharma, S." IsDKFZ="0"/>
+    <Author Pos="7" name="Dyckhoff, G." IsDKFZ="0"/>
+    <Author Pos="8" name="Grabe, N." IsDKFZ="1"/>
+    <Author Pos="9" name="Plinkert, P." IsDKFZ="0"/>
+    <Author Pos="10" name="Hoffmann, J." IsDKFZ="0"/>
+    <Author Pos="11" name="Freier, K." IsDKFZ="0"/>
+    <Author Pos="12" name="Hess, J." IsDKFZ="1"/>
+    <PMID>25388642</PMID>
+    <WOS>WOS:000352790300004</WOS>
+    <DOI>10.1002/ijc.29328</DOI>
+    <KST>A102</KST>
+    <KST>V964</KST>
+    <KST>G405</KST>
+    <KEYWORD>RADIORESISTANCE</KEYWORD>
+    <KEYWORD>microenvironment</KEYWORD>
+    <KEYWORD>PATHWAY</KEYWORD>
+    <KEYWORD>CANCER</KEYWORD>
+    <KEYWORD>APOPTOSIS</KEYWORD>
+    <KEYWORD>GROWTH-FACTOR RECEPTOR</KEYWORD>
+    <KEYWORD>resistance</KEYWORD>
+    <KEYWORD>MALIGNANT MAMMARY</KEYWORD>
+    <KEYWORD>AKT ACTIVATION</KEYWORD>
+    <KEYWORD>EGFRVIII</KEYWORD>
+    <Prog>Krebsforschung</Prog>
+  </row>
+  <row>
+    <publishedID>52581</publishedID>
+    <Artikel>An inducible hepatocellular carcinoma model for preclinical evaluation of antiangiogenic therapy in adult mice</Artikel>
+    <Journal>Cancer Research</Journal>
+    <ABSTr>The limited availability of experimental tumor models that faithfully mimic the progression of human tumors and their response to therapy remains a major bottleneck to the clinical translation and application of novel therapeutic principles. To address this challenge in hepatocellular carcinoma (HCC), one of the deadliest and most common cancers in the world, we developed and validated an inducible model of hepatocarcinogenesis in adult mice. Tumorigenesis was triggered by intravenous adenoviral delivery of Cre recombinase in transgenic mice expressing the hepatocyte-specific albumin promoter, a loxP-flanked stop cassette, and the SV40 large T-antigen (iAST). Cre recombinase-mediated excision of the stop cassette led to a transient viral hepatitis and resulted in multinodular tumorigenesis within 5 to 8 weeks. Tumor nodules with histologic characteristics of human HCC established a functional vasculature by cooption, remodeling, and angiogenic expansion of the preexisting sinusoidal liver vasculature with increasing signs of vascular immaturity during tumor progression. Treatment of mice with sorafenib rapidly resulted in the induction of vascular regression, inhibition of tumor growth, and enhanced overall survival. Vascular regression was characterized by loss of endothelial cells leaving behind avascular type IV collagen-positive empty sleeves with remaining pericytes. Sorafenib treatment led to transcriptional changes of Igf1, Id1, and cMet over time, which may reflect the emergence of potential escape mechanisms. Taken together, our results established the iAST model of inducible hepatocarcinogenesis as a robust and versatile preclinical model to study HCC progression and validate novel therapies.</ABSTr>
+    <PubYear>2014</PubYear>
+    <Feld596>74 (15), 4157-4169</Feld596>
+    <Strtp>4157</Strtp>
+    <Endp>4169</Endp>
+    <PubVol>74</PubVol>
+    <PubIss>15</PubIss>
+    <Author Pos="0" name="Runge A" IsDKFZ="1"/>
+    <Author Pos="1" name="Hu J" IsDKFZ="1"/>
+    <Author Pos="2" name="Wieland M" IsDKFZ="1"/>
+    <Author Pos="3" name="Bergeest JP" IsDKFZ="1"/>
+    <Author Pos="4" name="Mogler C" IsDKFZ="1"/>
+    <Author Pos="5" name="Neumann A" IsDKFZ="1"/>
+    <Author Pos="6" name="Geraud C" IsDKFZ="0"/>
+    <Author Pos="7" name="Arnold B" IsDKFZ="1"/>
+    <Author Pos="8" name="Rohr K" IsDKFZ="1"/>
+    <Author Pos="9" name="Komljenovic D" IsDKFZ="1"/>
+    <Author Pos="10" name="Schirmacher P" IsDKFZ="1"/>
+    <Author Pos="11" name="Goerdt S" IsDKFZ="0"/>
+    <Author Pos="12" name="Augustin HG" IsDKFZ="1"/>
+    <PMID>24906623</PMID>
+    <WOS>WOS:000341184400016</WOS>
+    <maus>B6 AST</maus>
+    <DOI>10.1158/0008-5472.CAN-13-2311</DOI>
+    <KST>E020</KST>
+    <KST>D050</KST>
+    <KST>B080</KST>
+    <KST>A190</KST>
+    <KST>L101</KST>
+    <KEYWORD>LIVER-CANCER</KEYWORD>
+    <KEYWORD>MOUSE MODELS</KEYWORD>
+    <KEYWORD>TUMOR VASCULATURE</KEYWORD>
+    <KEYWORD>RAF/MEK/ERK PATHWAY</KEYWORD>
+    <KEYWORD>TRANSGENIC MICE</KEYWORD>
+    <KEYWORD>ANGIOGENESIS</KEYWORD>
+    <KEYWORD>EXPRESSION</KEYWORD>
+    <KEYWORD>ENDOTHELIAL GROWTH-FACTOR</KEYWORD>
+    <KEYWORD>MICROVESSEL DENSITY</KEYWORD>
+    <KEYWORD>MULTIKINASE INHIBITOR</KEYWORD>
     <Prog>Krebsforschung</Prog>
   </row>
 </datei>

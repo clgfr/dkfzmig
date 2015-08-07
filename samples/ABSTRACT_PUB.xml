@@ -25,25 +25,7 @@
     <Author Pos="14" name="Bosch,F.X." IsDKFZ="0"/>
     <Author Pos="15" name="Castellsague,X." IsDKFZ="0"/>
     <KST>F020</KST>
-    <Prog>Krebsforschung</Prog>
-  </row>
-  <row>
-    <publishedID>59327</publishedID>
-    <Artikel>Analysis of Accuracy of ER and HER2 Expression By Immunohistochemistry and RNA-Sequencing on Core Cut Biopsies of Invasive Breast Cancer</Artikel>
-    <Journal>Modern Pathology</Journal>
-    <PubYear>2015</PubYear>
-    <PubVol>28</PubVol>
-    <Strtp>67A</Strtp>
-    <Endp>67A</Endp>
-    <Author Pos="0" name="Sinn,P." IsDKFZ="0"/>
-    <Author Pos="1" name="Jansen,K." IsDKFZ="0"/>
-    <Author Pos="2" name="Goepferich,M." IsDKFZ="0"/>
-    <Author Pos="3" name="Huang,Z.Q." IsDKFZ="1"/>
-    <Author Pos="4" name="Thewes,V." IsDKFZ="1"/>
-    <Author Pos="5" name="Schneeweiss,A." IsDKFZ="0"/>
-    <Author Pos="6" name="Lichter,P." IsDKFZ="1"/>
-    <Author Pos="7" name="Zapatka,M." IsDKFZ="1"/>
-    <KST>B060</KST>
+    <WOS>000349502202018</WOS>
     <Prog>Krebsforschung</Prog>
   </row>
 </datei>
