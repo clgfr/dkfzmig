@@ -189,7 +189,7 @@ class DKFZData:
         #transdict['DOI']      =  '#0247_2doia'
         transdict['DOI']       =  '#0247_'
         transdict['PMID']      =  '#0247_'
-        transdict['MOUSE']     =  '#0247_'
+        transdict['maus']     =  '#0247_'
         transdict['WOS']     =  '#0247_'
 
         transdict['Strtp']     =  '#440_0'
@@ -293,7 +293,7 @@ class DKFZData:
             if isDKFZ == True:
                 content = {} 
                 content['k'] = 'DKFZ'
-                content['x'] = pos
+                content['b'] = pos
                 auth_list_dkfz.append(content)
     
             if pos == '0':
