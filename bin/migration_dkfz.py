@@ -61,6 +61,7 @@ def PrepareWebsubmit(basedir, data, submissiontype, submissionrole):
         # Check group EDITORS and select one. Probably we can correlate it with
         # the institute.
         submissionuid = 2
+        # TODO check why we still get STAFF submissions in this case.
     if submissionrole == 'STAFF':
         submissionuid = 1
 
