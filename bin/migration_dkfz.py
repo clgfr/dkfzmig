@@ -43,7 +43,7 @@ def PrepareWebsubmit(basedir, data, submissiontype, submissionrole):
     import os
     import glob
     from invenio.search_engine                             import \
-        perform_request_search
+        perform_request_search, search_pattern
     from invenio.libwebsubmit_hgf                          import \
         generateCurdir,                                           \
         prepareUpload
@@ -65,7 +65,7 @@ def PrepareWebsubmit(basedir, data, submissiontype, submissionrole):
     if submissionrole == 'STAFF':
         submissionuid = 1
 
-    existingRecid = perform_request_search(p='970__a:"%s"' % data['970__']['a'])
+    existingRecid = search_pattern(p='970__a:"%s"' % data['970__']['a'])
 
     if len(existingRecid) > 0:
         (curdir, form, user_info) = generateCurdir(recid=existingRecid[0],
