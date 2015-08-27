@@ -355,8 +355,11 @@ class DKFZData:
         id_list_res = self._bibliographic[bibkey][field]
 
         for entry in id_list:
-            id_dict = self._getDict(idtype, entry)
-            id_list_res.append(id_dict)
+            if entry=='WOS:00':
+               pass
+            else:
+                id_dict = self._getDict(idtype, entry)
+                id_list_res.append(id_dict)
 
         self._bibliographic[bibkey][field] = id_list_res
 
