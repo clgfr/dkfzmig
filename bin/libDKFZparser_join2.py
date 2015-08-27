@@ -417,7 +417,7 @@ class DKFZData:
 
             else:
                 if len(data[key]) == 1:
-                    if data[key] != None:
+                    if data[key][0] != None:
                         field = self._transdict[key][0:5]
                         sf    = self._transdict[key][5]
                         #if not field in self._bibliographic[bibkey]:
