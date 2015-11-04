@@ -26,6 +26,7 @@ Migration script for DFKZ
 # pylint: disable=C0103
 
 import argparse
+import collections
 import logging
 import sys
 logging.basicConfig()
@@ -98,6 +99,7 @@ def PrepareWebsubmit(basedir, data, submissiontype, submissionrole):
     # 245__ is special, as we have the structured subfield $h that gets
     # flattened in websubmit procedures.
     write_file(curdir, 'hgf_245__a', data['245__']['a'])
+
     prepareUpload(curdir, form, user_info, mode='SBI')
 
     return
@@ -199,12 +201,37 @@ def GetSubmissionType(filename, pubtype, defaultvalue):
     return res
 
 
+def convert2utf8(data):
+    """
+    Converts a nested structure from unicode to utf-8. This is a recursive
+    algorithm, thus the structure can be arbitrarily nested.
+
+    Note: this requires at least Python 2.6
+
+    http://stackoverflow.com/questions/1254499#1254499
+
+    @param data: a structure of dicts/lists
+    """
+    if isinstance(data, basestring):
+        if isinstance(data, unicode):
+            return data.encode('utf-8')
+        else:
+            return data
+    elif isinstance(data, collections.Mapping):
+        return dict(map(convert2utf8, data.iteritems()))
+    elif isinstance(data, collections.Iterable):
+        return type(data)(map(convert2utf8, data))
+    else:
+        return data
+
+
 def main():
     """
     Process all files in a given dir and websubmit them.
     """
     import os
     import shutil
+    import copy
     from invenio.libRelease2OpenAccess_join2 import UploadBatches
 
     logger.info("Starting conversion")
@@ -244,7 +271,10 @@ def main():
         for key in data.getBibliographic():
             print key
             #pprint.pprint(data.getBibliographic()[key])
-            PrepareWebsubmit(basedir, data.getBibliographic()[key],
+            bibliographic = copy.deepcopy(data.getBibliographic()[key])
+            bibliographic = convert2utf8(bibliographic)
+            PrepareWebsubmit(basedir,
+                             bibliographic,
                              subtype, subrole)
 
     UploadBatches(basedir, batchdir, packagesize=1000)
