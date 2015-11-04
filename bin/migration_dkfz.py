@@ -33,6 +33,7 @@ logger = logging.getLogger(__name__)
 
 from libDKFZparser_join2 import DKFZData
 
+
 def PrepareWebsubmit(basedir, data, submissiontype, submissionrole):
     """
     Prepare records for websubmission. This should build up the proper
@@ -42,16 +43,16 @@ def PrepareWebsubmit(basedir, data, submissiontype, submissionrole):
     """
     import os
     import glob
-    from invenio.search_engine                             import \
-        perform_request_search, search_pattern
-    from invenio.libwebsubmit_hgf                          import \
+    from invenio.search_engine import                             \
+        search_pattern
+    from invenio.libwebsubmit_hgf import                          \
         generateCurdir,                                           \
         prepareUpload
     from invenio.websubmit_functions.Websubmit_Helpers_hgf import \
         write_file,                                               \
         write_all_files
-        # write_done_file,                                          \
-        # write_json,                                               \
+        # write_done_file,                                        \
+        # write_json,                                             \
 
     create_recid = True
 
@@ -85,7 +86,7 @@ def PrepareWebsubmit(basedir, data, submissiontype, submissionrole):
     else:
         (curdir, form, user_info) = generateCurdir(recid=None,
                                                    uid=submissionuid,
-                                                   access = data['970__']['a'],
+                                                   access=data['970__']['a'],
                                                    basedir=basedir, mode='SBI',
                                                    type=submissiontype,
                                                    create_recid=create_recid)
@@ -100,6 +101,7 @@ def PrepareWebsubmit(basedir, data, submissiontype, submissionrole):
     prepareUpload(curdir, form, user_info, mode='SBI')
 
     return
+
 
 def RoleAndTypeMapping():
     """
@@ -135,13 +137,14 @@ def RoleAndTypeMapping():
 
     for role in submissionrole:
         logger.info('If filename contains %s (= %s) submit as %s' %
-                      (role, descr[role], submissionrole[role]))
+                    (role, descr[role], submissionrole[role]))
 
     for typ in pubtype:
         logger.info('If filename contains %s use pubtype %s' %
-                      (typ, pubtype[typ]))
+                   (typ, pubtype[typ]))
 
     return submissionrole, pubtype
+
 
 def GetFiles2Process(directory, criterion, pubtype):
     """
@@ -159,7 +162,7 @@ def GetFiles2Process(directory, criterion, pubtype):
     print pubtype
 
     files2process = []
-    filesunique   = {}
+    filesunique = {}
     for f in allfiles:
         for typ in sorted(pubtype, reverse=True):
             if typ in f:
@@ -167,9 +170,10 @@ def GetFiles2Process(directory, criterion, pubtype):
 
     for f in filesunique:
         files2process.append(f)
-        logger.info("Inputfile found: %s" %f)
+        logger.info("Inputfile found: %s" % f)
 
     return files2process
+
 
 def GetSubmissionType(filename, pubtype, defaultvalue):
     """
@@ -194,7 +198,7 @@ def GetSubmissionType(filename, pubtype, defaultvalue):
 
     return res
 
-#======================================================================
+
 def main():
     """
     Process all files in a given dir and websubmit them.
@@ -205,10 +209,9 @@ def main():
 
     logger.info("Starting conversion")
 
-    basedir   = '/tmp/websubmit'
-    batchdir  = '/tmp/batch'
+    basedir = '/tmp/websubmit'
+    batchdir = '/tmp/batch'
     sampledir = '../samples/'
-
 
     logger.info("Base dir: %s" % basedir)
     logger.info("Sample dir: %s" % sampledir)
@@ -219,13 +222,12 @@ def main():
         shutil.rmtree(batchdir)
     except:
         logger.error("Can not delete dirs")
-    logger.info("Creating %s and %s" %(basedir, batchdir))
+    logger.info("Creating %s and %s" % (basedir, batchdir))
     try:
         os.makedirs(basedir)
         os.makedirs(batchdir)
     except:
         logger.error("Can not create dirs")
-
 
     submissionrole, pubtype = RoleAndTypeMapping()
     files2process = GetFiles2Process(sampledir, '*.xml', pubtype)
@@ -251,9 +253,8 @@ def main():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--verbose', '-v', default = 0, action='count')
+    parser.add_argument('--verbose', '-v', default=0, action='count')
     args = parser.parse_args()
-
 
     if args.verbose == 0:
         # Default
@@ -266,7 +267,6 @@ if __name__ == '__main__':
         log_level = logging.ERROR
 
     logger.setLevel(logging.INFO)
-
     logger.info('Migrating data for DKFZ')
 
     main()
