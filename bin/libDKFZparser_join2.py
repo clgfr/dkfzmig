@@ -160,9 +160,9 @@ class DKFZData:
         ### pofsearchdict[self._PROG_UNGEBUNDEN] = 'id:899 2019'
 
         # Translate names to proper topic Ids.
-        pofsearchdict[self._KREBSFORSCHUNG]  = 'id:"G:(DE-HGF)POF3-311"'
-        pofsearchdict[self._HERZ_KREISLAUF]  = 'id:"G:(DE-HGF)POF3-321"'
-        pofsearchdict[self._PROG_UNGEBUNDEN] = 'id:"G:(DE-HGF)POF3-899"'
+        pofsearchdict[self._KREBSFORSCHUNG]  = 'id:"G:(DE-HGF)POF2-3109"'
+        pofsearchdict[self._HERZ_KREISLAUF]  = 'id:"G:(DE-HGF)POF2-3209"'
+        pofsearchdict[self._PROG_UNGEBUNDEN] = 'id:"G:(DE-HGF)POF2-899"'
         return pofsearchdict
 
     def _setupTransdict(self):
