@@ -232,7 +232,7 @@ def main():
     import os
     import shutil
     import copy
-    from invenio.libRelease2OpenAccess_join2 import UploadBatches
+    from invenio.libHelpers_hgf import UploadBatches
 
     logger.info("Starting conversion")
 
