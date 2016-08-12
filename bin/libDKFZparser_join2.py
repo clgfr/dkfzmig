@@ -326,7 +326,7 @@ class DKFZData:
         for kst in ksts:
             content = {}
 
-            content['0'] = kst # TODO get real IDs
+            content['0'] = 'I:(DE-He78)'+kst+'-20160331' # TODO get real IDs
             content['k'] = kst
             content['l'] = kst # TODO get long name
             content['x'] = idx
