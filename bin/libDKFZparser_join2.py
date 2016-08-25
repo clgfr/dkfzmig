@@ -210,7 +210,9 @@ class DKFZData:
         transdict['Publisher']      =  '260__b'
         transdict['ErschIn']      =  '29510a'
         transdict['Place']      =  '260__a'
-        transdict['Pages']      =  '300__a'
+        #transdict['Pages']      =  '300__a'
+        transdict['BStrtp']      =  '#300__a'
+        transdict['BEndp']      =  '#Bepage'
         transdict['Edition']      =  '250__a'
         transdict['COOP']      =  '#COOPManuell'
         #TODO#gfr#transdict['Editor']      =  '#Editor700xx'
@@ -245,6 +247,22 @@ class DKFZData:
 
         self._bibliographic[bibkey][field].update(content)
 
+    def _processBookPages(self, bibkey, field, data):
+
+        start = data['BStrtp']
+        if start[0] != None:
+            if data.has_key('Endp'):
+                end = data['Endp']
+                if end[0] == None:
+                    end = start
+        #reminder TODO: if end[0]==' '  
+            else:   
+                end = start
+            pages = str(start[0]) + '-' + str(end[0])
+            self._bibliographic[bibkey][field] = pages
+        else:
+            print 'PubId: '+bibkey+' has no Start-Page-Entry'
+            pass
 
     def _nameInsertComma(self, name):
         """
@@ -401,6 +419,10 @@ class DKFZData:
                 elif key == 'Strtp':
                     self._processPages(bibkey, field, data)
                 elif key == 'Endp':
+                    pass
+                elif key == 'BStrtp':
+                    self._processBookPages(bibkey, field, data)
+                elif key == 'BEndp':
                     pass
                 elif key == 'KST':
                     self._processKST(bibkey, field, data[key])
