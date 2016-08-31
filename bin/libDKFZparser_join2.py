@@ -194,6 +194,7 @@ class DKFZData:
 
         transdict['Strtp']     =  '#440_0'
         transdict['Endp']      =  '#epage'
+        transdict['IsReview']  =  '#3367_x'
         #transdict['KST']      =  '#KST'
         transdict['KST']       =  '#9201_'
         transdict['Author']    =  '#Author'
@@ -247,6 +248,15 @@ class DKFZData:
 
         self._bibliographic[bibkey][field].update(content)
 
+    def _processReviewArt(self, bibkey, field, data):
+        is_review = data['IsReview']
+        if is_review == ['1']:
+            content = 'Review Article'
+            print 'content: ' , content
+            self._bibliographic[bibkey][field] = content
+        else:
+            pass
+    
     def _processBookPages(self, bibkey, field, data):
 
         start = data['BStrtp']
@@ -420,6 +430,8 @@ class DKFZData:
                     self._processPages(bibkey, field, data)
                 elif key == 'Endp':
                     pass
+                elif key == 'IsReview':
+                    self._processReviewArt(bibkey, field, data)
                 elif key == 'BStrtp':
                     self._processBookPages(bibkey, field, data)
                 elif key == 'BEndp':
