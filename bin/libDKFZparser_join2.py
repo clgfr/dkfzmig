@@ -370,7 +370,7 @@ class DKFZData:
         keyword_list = []
 
         for keyword in keywords:
-            content = self._getDict('Author', keyword)
+            content = self._getDict('KEYWORD', keyword)
 
             keyword_list.append(content)
 
