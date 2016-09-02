@@ -341,7 +341,8 @@ class DKFZData:
                 auth_list.append(content)
     
 
-        if len(auth_list) > 1: # we have more than one author
+        #if len(auth_list) > 1: # we have more than one author
+        if len(auth_list) > 0: # at least first_author plus other author(s)
             self._bibliographic[pubId][self._OTHER_AUTH] = auth_list
     
         if len(auth_list_dkfz) > 0: # we have at least one DKFZ author
